@@ -17,12 +17,12 @@ public class GiftSend {
     @Id @GeneratedValue
     @Column(name = "gift_send_no")
     private Integer no;
-    @Column(length = 100) @NotNull
+    @Column(length = 100, nullable = false)
     private String name;
-    @Column(length = 20) @NotNull
+    @Column(length = 20, nullable = false)
     private String category;
 
-    @NotNull
+    @Column(nullable = false)
     private Long price;
     @Column(columnDefinition = "text")
     private String note;

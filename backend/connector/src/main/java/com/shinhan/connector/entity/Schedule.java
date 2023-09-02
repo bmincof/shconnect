@@ -24,21 +24,22 @@ public class Schedule {
     @GeneratedValue
     @Column(name = "schedule_no")
     private Integer no;
-    @Column(length = 100) @NotNull
+    @Column(length = 100, nullable = false)
     private String name;
     @Column(columnDefinition = "text")
     private String content;
-    @Column(length = 50) @NotNull
+    @Column(length = 50, nullable = false)
     private String category;
+    @Column(nullable = false)
     private Long date;
-    @Column(length = 10)
+    @Column(length = 10, nullable = false)
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'NONE'")
     private RepeatCycle repeatCycle;
-    @NotNull
+    @Column(nullable = false)
     @ColumnDefault("false")
     private Boolean favorite;
-    @Column(length = 10)
+    @Column(length = 10, nullable = false)
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'NONE'")
     private Alarm alarm;
