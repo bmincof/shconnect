@@ -1,5 +1,6 @@
 package com.shinhan.connector.service;
 
+import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.ScheduleAddRequest;
 import com.shinhan.connector.dto.ScheduleAddResponse;
 import com.shinhan.connector.entity.Schedule;
@@ -32,5 +33,11 @@ public class ScheduleService {
 
         // API 응답 생성
         return new ScheduleAddResponse(schedule);
+    }
+
+    public ResponseMessage deleteSchedule(Integer scheduleNo) {
+        scheduleRepository.deleteById(scheduleNo);
+
+        return new ResponseMessage("삭제가 완료되었습니다.");
     }
 }
