@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AuthenticationRequest {
+public class TransferOneCheckRequest {
     String bankCode;
     String accountNumber;
+    String confirm;
 }
