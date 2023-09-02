@@ -21,20 +21,20 @@ public class Member {
     private Integer no;
     @Column(length = 50, unique = true)
     private String id;
-    @Column(length = 200) @NotNull
+    @Column(length = 200, nullable = false)
     private String password;
-    @Column(length = 50) @NotNull
+    @Column(length = 50, nullable = false)
     private String name;
-    @NotNull
+    @Column(nullable = false)
     private Integer age;
-    @Column(length = 1) @NotNull
+    @Column(length = 1, nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(length = 50) @NotNull
+    @Column(length = 50, nullable = false)
     private String contact;
-    @Column(name = "bank_code", length = 10)
+    @Column(name = "bank_code", length = 10, nullable = false)
     private String bankCode;
-    @Column(name = "account_number", length = 100)
+    @Column(name = "account_number", length = 100, unique = true)
     private String accountNumber;
 
 

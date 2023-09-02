@@ -17,13 +17,13 @@ public class GiftReceive {
     @Id @GeneratedValue
     @Column(name = "gift_receive_no")
     private Integer no;
-    @Column(length = 100) @NotNull
+    @Column(length = 100, nullable = false)
     private String name;
-    @Column(length = 20) @NotNull
+    @Column(length = 20, nullable = false)
     private String category;
-    @Column(name = "price_min") @NotNull
+    @Column(name = "price_min", nullable = false)
     private Long priceMin;
-    @Column(name = "price_max") @NotNull
+    @Column(name = "price_max", nullable = false)
     private Long priceMax;
     @Column(columnDefinition = "text")
     private String note;
