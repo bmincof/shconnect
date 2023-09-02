@@ -26,6 +26,8 @@ public class Friend {
     private String relation;
     @Column(length = 50)
     private String belong;
+    @Column(name = "bank_code", length = 10)
+    private String bankCode;
     @Column(name = "account_number", length = 100)
     private String accountNumber;
     @Column(length = 100)

@@ -32,6 +32,10 @@ public class Member {
     private Gender gender;
     @Column(length = 50) @NotNull
     private String contact;
+    @Column(name = "bank_code", length = 10)
+    private String bankCode;
+    @Column(name = "account_number", length = 100)
+    private String accountNumber;
 
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
