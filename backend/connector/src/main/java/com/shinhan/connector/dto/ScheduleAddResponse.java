@@ -5,9 +5,9 @@ import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
+@Data
+@Builder
+@RequiredArgsConstructor
 public class ScheduleAddResponse {
     private Integer scheduleNo;
     private Integer friendNo;

@@ -3,15 +3,12 @@ package com.shinhan.connector.dto;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.NoSuchElementException;
 
-@RequiredArgsConstructor
-@NoArgsConstructor
-@Getter
+@Data
+@Builder
 public class ScheduleAddRequest {
     // 지인 식별번호
     private Integer friendNo;
