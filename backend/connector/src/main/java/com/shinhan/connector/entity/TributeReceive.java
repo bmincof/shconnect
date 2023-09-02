@@ -1,5 +1,6 @@
 package com.shinhan.connector.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,9 @@ public class TributeReceive {
     @GeneratedValue
     @Column(name = "tribute_receive_no")
     private Integer no;
+    @NotNull
     private Long amount;
+    @Column(columnDefinition = "text")
     private String note;
 
     @ManyToOne(fetch = FetchType.LAZY)

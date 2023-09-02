@@ -1,6 +1,7 @@
 package com.shinhan.connector.entity;
 
 import com.shinhan.connector.enums.Gender;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,16 +21,16 @@ public class Member {
     private Integer no;
     @Column(length = 50, unique = true)
     private String id;
-    @Column(length = 200, nullable = false)
+    @Column(length = 200) @NotNull
     private String password;
-    @Column(length = 50, nullable = false)
+    @Column(length = 50) @NotNull
     private String name;
-    @Column(nullable = false)
+    @NotNull
     private Integer age;
-    @Column(nullable = false, length = 1)
+    @Column(length = 1) @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(length = 50)
+    @Column(length = 50) @NotNull
     private String contact;
 
 

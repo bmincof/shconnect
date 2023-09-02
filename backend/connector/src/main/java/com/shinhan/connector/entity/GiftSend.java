@@ -1,5 +1,6 @@
 package com.shinhan.connector.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,15 +14,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GiftSend {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     @Column(name = "gift_send_no")
     private Integer no;
-    @Column(length = 100, nullable = false)
+    @Column(length = 100) @NotNull
     private String name;
-    @Column(length = 20, nullable = false)
+    @Column(length = 20) @NotNull
     private String category;
-    @Column(nullable = false)
+
+    @NotNull
     private Long price;
     @Column(columnDefinition = "text")
     private String note;
