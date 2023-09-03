@@ -2,9 +2,7 @@ package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.JwtUtils;
 import com.shinhan.connector.config.jwt.Token;
-import com.shinhan.connector.dto.SignInRequest;
-import com.shinhan.connector.dto.SignInResponse;
-import com.shinhan.connector.dto.TokenAndMemberResponse;
+import com.shinhan.connector.dto.*;
 import com.shinhan.connector.entity.Member;
 import com.shinhan.connector.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +47,33 @@ public class MemberService {
                 .token(token)
                 .signInResponse(SignInResponse.entityToDto(member))
                 .build();
+    }
+
+    public boolean duplicationCheck(String memberId) {
+        log.info("[아이디 중복체크] 아이디 : {}", memberId);
+        return memberRepository.existsMemberById(memberId);
+    }
+
+    public ResponseMessage signUp(SignUpRequest signUpRequest) {
+        log.info("[회원가입] 회원가입 요청. {}", signUpRequest.toString());
+
+        if (duplicationCheck(signUpRequest.getId())) {
+            log.error("[회원가입] 이미 가입된 아이디입니다. {}", signUpRequest.getId());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 있는 아이디입니다.");
+        }
+
+        signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        log.info("[회원가입] 비밀번호 암호화 성공");
+
+        try {
+            memberRepository.save(signUpRequest.toEntity());
+            memberRepository.flush();
+        } catch (Exception e) {
+            log.error("[회원가입] 회원가입 저장 실패");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+        }
+
+        log.info("[회원가입] 회원가입 완료");
+        return new ResponseMessage("회원가입 성공");
     }
 }

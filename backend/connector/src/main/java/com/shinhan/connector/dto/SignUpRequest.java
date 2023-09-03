@@ -17,7 +17,7 @@ public class SignUpRequest {
     String bankCode;
     String accountNumber;
 
-    public Member dtoToEntity() {
+    public Member toEntity() {
         return Member.builder()
                 .id(id)
                 .password(password)
