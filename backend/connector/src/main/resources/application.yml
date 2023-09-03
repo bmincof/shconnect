@@ -27,9 +27,9 @@ spring:
       max-file-size: 10MB           # 업로드되는 개별 파일의 최대 크기 (default:1MB)
       max-request-size: 10MB        # 전체 멀티파트 요청의 최대 크기 (default:10MB)
       file-size-threshold: 1MB      # 메모리에 보관할 수 있는 최대 크기 (default:0MB)
-  output:
-    ansi:
-      enabled: DETECT             # 로깅 및 콘솔 출력 관련 설정 (default: true)
+#  output:
+#    ansi:
+#      enabled: DETECT             # 로깅 및 콘솔 출력 관련 설정 (default: true)
 
 logging.level:
     org.hibernate:
@@ -45,7 +45,7 @@ server:
 
 jwt:
   issuer: connectorService
-  secret_key: "asdjkflGD^%UYajsdfads$@!i!ofjcviozD!#$$RFDZSfzxcv3167ag!5$@*(&2daf75j"
+  secret_key: "asdf5sda2fsadfs51dafa1sdf988a14sdfdsa21fsd22a7fsdafds2fd2afasdfa21sd4fasdf3sadfasdf4asdfsad3fasdfasd"
   access_expiration_ms: 10000000
   refresh_expiration_ms: 2592000000
 
