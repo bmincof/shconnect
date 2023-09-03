@@ -42,7 +42,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("MEMBER"));
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_MEMBER"));
     }
 
     @Override

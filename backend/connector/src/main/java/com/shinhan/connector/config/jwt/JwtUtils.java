@@ -30,17 +30,17 @@ public class JwtUtils {
     @Value("${jwt.issuer}")
     private String issuer;
 
-    public String generateAccessToken(AuthenticationManager authenticationManager, String userId, String password) {
+    public String generateAccessToken(AuthenticationManager authenticationManager, String memberId, String password) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userId, password));
+                new UsernamePasswordAuthenticationToken(memberId, password));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return makeToken(authentication).getAccessToken();
     }
 
-    public Token generateAccessAndRefreshTokens(AuthenticationManager authenticationManager, String userId, String password) {
+    public Token generateAccessAndRefreshTokens(AuthenticationManager authenticationManager, String memberId, String password) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userId, password));
+                new UsernamePasswordAuthenticationToken(memberId, password));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
