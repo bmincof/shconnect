@@ -29,7 +29,7 @@ public class MemberController {
 
     // 로그인
     @PostMapping("/sign-in")
-    public ResponseEntity<SignInResponse> signIn(SignInRequest signInRequest) {
+    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
         // 로그인 체크 메서드 + header에 JWT 담기
         TokenAndMemberResponse tokenAndMemberResponse = memberService.signIn(signInRequest);
 
@@ -41,28 +41,27 @@ public class MemberController {
 
     // 1원 송금
     @PostMapping("/1transfer")
-    public ResponseEntity<ResponseMessage> transferOne(TransferOneRequest transferOneRequest) {
-        // 1원 송금 로직
-        return ResponseEntity.ok(new ResponseMessage("1원이 송금되었습니다."));
+    public ResponseEntity<ResponseMessage> transferOne(@RequestBody TransferOneRequest transferOneRequest) {
+        return ResponseEntity.ok(memberService.transfer1(transferOneRequest));
     }
 
     // 1원 송금 체크
     @PostMapping("/1transfer/check")
-    public ResponseEntity<TransferOneCheckResponse> transferOne(TransferOneCheckRequest transferOneCheckRequest) {
+    public ResponseEntity<TransferOneCheckResponse> transferOne(@RequestBody TransferOneCheckRequest transferOneCheckRequest) {
         // 1원 송금 메시지 일치 여부 체크 로직
         return null;
     }
     
     // 회원가입
     @PostMapping("/sign-up")
-    public ResponseEntity<ResponseMessage> signUp(SignUpRequest signUpRequest) {
+    public ResponseEntity<ResponseMessage> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(memberService.signUp(signUpRequest));
     }
 
     // 아이디 중복체크
     @PostMapping("/check")
-    public ResponseEntity<ResponseResult> duplicationCheck(DuplicationCheckRequest duplicationCheckRequest) {
+    public ResponseEntity<ResponseResult> duplicationCheck(@RequestBody DuplicationCheckRequest duplicationCheckRequest) {
         return ResponseEntity.ok(new ResponseResult(memberService.duplicationCheck(duplicationCheckRequest.getId())));
     }
 }

@@ -49,6 +49,10 @@ jwt:
   access_expiration_ms: 10000000
   refresh_expiration_ms: 2592000000
 
+shb:
+  url: "https://shbhack.shinhan.com"
+  api_key: "2023_Shinhan_SSAFY_Hackathon"
+
 cors:
   front_url: "*"
 
