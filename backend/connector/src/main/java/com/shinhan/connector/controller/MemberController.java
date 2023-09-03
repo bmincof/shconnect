@@ -56,7 +56,13 @@ public class MemberController {
     // 회원가입
     @PostMapping("/sign-up")
     public ResponseEntity<ResponseMessage> signUp(SignUpRequest signUpRequest) {
-        // 회원가입 메서드 로직
-        return null;
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(memberService.signUp(signUpRequest));
+    }
+
+    // 아이디 중복체크
+    @PostMapping("/check")
+    public ResponseEntity<ResponseResult> duplicationCheck(DuplicationCheckRequest duplicationCheckRequest) {
+        return ResponseEntity.ok(new ResponseResult(memberService.duplicationCheck(duplicationCheckRequest.getId())));
     }
 }
