@@ -4,6 +4,10 @@ import { Provider } from "react-redux";
 import { Fontisto } from '@expo/vector-icons';
 import MyButton from './src/components/common/Button';
 import char1 from './assets/character1.png';
+import char2 from './assets/character2.png';
+import char3 from './assets/character3.png';
+import char7 from './assets/character7.png';
+import char8 from './assets/character8.png';
 
 import store from "./store";
 
@@ -32,7 +36,35 @@ export default function App() {
           </View>
           <MyButton title="로그인" backgroundColor="#2B70CC" color="white" />
         </View>
-        <View style={styles.bottom}></View>
+        <View style={styles.bottom}>
+          <View style={styles.titleCon}>
+            <Text style={styles.title}>지인 관리 서비스</Text>
+          </View>
+          <View style={styles.serviceCon}>
+            <View style={styles.serviceLine}>
+              <View style={styles.serviceEach}>
+                <Text style={styles.serviceTitle}>지인 등록</Text>
+                  <Image source={char2} resizeMode="contain" style={styles.serviceImg} />
+              </View>
+              <View style={styles.serviceEach}>
+                <Text style={styles.serviceTitle}>일정 등록</Text>
+                <Image source={char3} resizeMode="contain" style={styles.serviceImg} />
+              </View>
+            </View>
+            <View style={styles.serviceLine}>
+              <View style={styles.serviceEach}>
+                <Text style={styles.serviceTitle}>나에게 맞는</Text>
+                <Text style={styles.serviceTitle}>적금편지 상품 찾기</Text>
+                <Image source={char7} resizeMode="contain"  style={styles.serviceImg} />
+              </View>
+              <View style={styles.serviceEach}>
+                <Text style={styles.serviceTitle}>선물 · 금액 추천</Text>
+                <Image source={char8} resizeMode="contain"  style={styles.serviceImg} />
+              </View>
+            </View>
+          </View>
+        </View>
+        <View style={styles.nav}></View>
       </View>
     </Provider>
   );
@@ -45,7 +77,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   titleCon: {
-    flex: 0.2,
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 45,
@@ -57,7 +88,8 @@ const styles = StyleSheet.create({
   },
   loginCon: {
     flex: 1.3,
-    margin: 30,
+    marginTop: 30,
+    marginHorizontal: 30,
     paddingHorizontal: 20,
     borderRadius: 15,
     backgroundColor: "white",
@@ -81,8 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   bottom: {
-    flex: 3,
-    backgroundColor: "green",
+    flex: 2.5,
   },
   grayText: {
     fontSize: 16,
@@ -95,5 +126,40 @@ const styles = StyleSheet.create({
   },
   sub: {
     marginBottom: 12,
+  },
+  serviceCon: {
+    flex: 1,
+    marginHorizontal: 20,
+    paddingTop: 20,
+  },
+  serviceEach: {
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 15,
+    justifyContent: "center",
+    marginHorizontal: 10,
+    marginBottom: 23,
+    paddingHorizontal: 15,
+  },
+  serviceTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  serviceImg: {
+    width: "60%",
+    height: "60%",
+    marginLeft: 50,
+  },
+  serviceLine: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  nav: {
+    flex: 0.3,
+    backgroundColor: "white"
+  },
+  serviceTitle: {
+    fontSize: 16,
+    fontWeight: "600",
   }
 });
