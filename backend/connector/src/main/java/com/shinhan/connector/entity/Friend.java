@@ -18,14 +18,16 @@ public class Friend {
     @Id @GeneratedValue
     @Column(name = "friend_no")
     private Integer no;
-    @Column(length = 20) @NotNull
+    @Column(length = 20, nullable = false)
     private String name;
-    @Column(length = 20) @NotNull
+    @Column(length = 20, nullable = false)
     private String contact;
-    @Column(length = 20) @NotNull
+    @Column(length = 20, nullable = false)
     private String relation;
     @Column(length = 50)
     private String belong;
+    @Column(name = "bank_code", length = 10)
+    private String bankCode;
     @Column(name = "account_number", length = 100)
     private String accountNumber;
     @Column(length = 100)

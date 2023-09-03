@@ -18,21 +18,21 @@ public class SavingsLetter {
     @GeneratedValue
     @Column(name = "savings_letter_no")
     private Integer no;
-    @Column(length = 50) @NotNull
+    @Column(length = 50, nullable = false)
     private String name;
     @Column(columnDefinition = "text")
     private String content;
-    @NotNull
+    @Column(nullable = false)
     private Integer currentRound;
-    @NotNull
+    @Column(nullable = false)
     private Integer totalRound;
-    @NotNull
+    @Column(nullable = false)
     private Integer amount;
-    @NotNull
+    @Column(nullable = false)
     private Long paymentDate;
-    @NotNull
+    @Column(nullable = false)
     private Long startDate;
-    @NotNull
+    @Column(nullable = false)
     private Long endDate;
 
 

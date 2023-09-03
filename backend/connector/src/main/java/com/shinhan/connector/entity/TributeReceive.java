@@ -18,7 +18,7 @@ public class TributeReceive {
     @GeneratedValue
     @Column(name = "tribute_receive_no")
     private Integer no;
-    @NotNull
+    @Column(nullable = false)
     private Long amount;
     @Column(columnDefinition = "text")
     private String note;
