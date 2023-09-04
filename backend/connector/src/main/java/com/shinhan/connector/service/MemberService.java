@@ -1,6 +1,7 @@
 package com.shinhan.connector.service;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.shinhan.connector.config.jwt.JwtUtils;
 import com.shinhan.connector.config.jwt.Token;
 import com.shinhan.connector.dto.*;
@@ -12,18 +13,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -37,6 +39,9 @@ public class MemberService {
     private String bankUrl;
     @Value("${shb.api_key}")
     private String apiKey;
+    private Map<String, String> transfer1Check = new HashMap<>();
+    private final String CHECK_NUMBER = "1234";
+    private Gson gson = new Gson();
 
     public TokenAndMemberResponse signIn(SignInRequest signInRequest) {
         log.info("[로그인] 로그인 요청, {}", signInRequest.toString());
@@ -108,9 +113,8 @@ public class MemberService {
             shbRequest.put("dataBody", TransferPostRequest.builder()
                     .입금계좌번호(transferOneRequest.getAccountNumber())
                     .입금은행코드(transferOneRequest.getBankCode())
-                    .입금통장메모("1234").build());
+                    .입금통장메모(CHECK_NUMBER).build());
 
-            Gson gson = new Gson();
             String requestBody = gson.toJson(shbRequest);
 
             log.info("[1원 송금] JSON 객체 바꾸기. {}", requestBody);
@@ -122,7 +126,71 @@ public class MemberService {
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
+                transfer1Check.put(transferOneRequest.getBankCode() + transferOneRequest.getAccountNumber(), CHECK_NUMBER);
                 return new ResponseMessage("1원이 송금되었습니다.");
+            } else {
+                throw new RuntimeException("HTTP 요청 실패. 응답 코드: " + responseCode);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public TransferOneCheckResponse transfer1Check(TransferOneCheckRequest transferOneCheckRequest) {
+        log.info("[1원인증 체크] 1원인증 체크 시작");
+        String key = transferOneCheckRequest.getBankCode() + transferOneCheckRequest.getAccountNumber();
+
+        if (!transfer1Check.containsKey(key)) {
+            log.error("[1원인증 체크] 인증요청하지 않은 계좌입니다. {}", transferOneCheckRequest.getAccountNumber());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "인증요청되지 않은 계좌입니다.");
+        }
+
+        if (!transfer1Check.get(key).equals(transferOneCheckRequest.getConfirm())) {
+            log.error("[1원인증 체크] 인증번호가 일치하지 않습니다. {}", transferOneCheckRequest.getConfirm());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "인증번호가 일치하지 않습니다.");
+        }
+        transfer1Check.remove(key);
+
+        try {
+            URL url = new URL(bankUrl + "/v1/search/name");
+
+            log.info("[1원인증 체크] 헤더 설정");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+            connection.setDoOutput(true);
+
+            log.info("[1원인증 체크] 바디 설정");
+            Map<String, Object> shbRequest = new HashMap<>();
+            shbRequest.put("dataHeader", new BankHeader(apiKey));
+            shbRequest.put("dataBody", TransferPostRequest.builder()
+                    .입금계좌번호(transferOneCheckRequest.getAccountNumber())
+                    .입금은행코드(transferOneCheckRequest.getBankCode())
+                    .build());
+
+            String requestBody = gson.toJson(shbRequest);
+
+            log.info("[1원인증 체크] JSON 객체 바꾸기. {}", requestBody);
+
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = requestBody.getBytes("UTF-8");
+                os.write(input, 0, input.length);
+            }
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = br.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                Type type = new TypeToken<Map<String, Map<String, String>>>(){}.getType();
+                Map<String, Map<String, String>> data = gson.fromJson(response.toString(), type);
+
+                return new TransferOneCheckResponse(data.get("dataBody").get("입금계좌성명"));
             } else {
                 throw new RuntimeException("HTTP 요청 실패. 응답 코드: " + responseCode);
             }
