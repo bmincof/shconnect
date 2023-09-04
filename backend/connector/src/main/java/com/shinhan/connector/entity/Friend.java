@@ -1,5 +1,6 @@
 package com.shinhan.connector.entity;
 
+import com.shinhan.connector.enums.Relation;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,8 @@ public class Friend {
     @Column(length = 20, nullable = false)
     private String contact;
     @Column(length = 20, nullable = false)
-    private String relation;
+    @Enumerated(EnumType.STRING)
+    private Relation relation;
     @Column(length = 50)
     private String belong;
     @Column(name = "bank_code", length = 10)
