@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.gson.Gson;
+import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.*;
 import com.shinhan.connector.service.MemberService;
 import io.jsonwebtoken.Header;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,8 +50,7 @@ public class MemberController {
     // 1원 송금 체크
     @PostMapping("/1transfer/check")
     public ResponseEntity<TransferOneCheckResponse> transferOne(@RequestBody TransferOneCheckRequest transferOneCheckRequest) {
-        // 1원 송금 메시지 일치 여부 체크 로직
-        return null;
+        return ResponseEntity.ok(memberService.transfer1Check(transferOneCheckRequest));
     }
     
     // 회원가입
