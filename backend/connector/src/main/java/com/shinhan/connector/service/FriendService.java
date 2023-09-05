@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public FriendAddResponse createFriend(FriendAddRequest friendAddRequest, UserDetailsImpl user) {
         log.info("[지인 등록] 지인등록 요청. {}, {}", friendAddRequest.toString(), user.getUserId());
 
@@ -52,5 +54,23 @@ public class FriendService {
             log.error("[지인상세 조회] 지인 번호 잘못됨");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당하는 친구가 없습니다.");
         }));
+    }
+
+    @Transactional
+    public void removeFriend(Integer friendNo, UserDetailsImpl user) {
+        log.info("[지인 삭제] 지인 삭제요청. {}, {}", friendNo, user.toString());
+
+        Friend friend = friendRepository.findById(friendNo)
+                .orElseThrow(() -> {
+                    log.error("[지인 삭제] 지인 번호 잘못됨");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "지인 번호가 잘못되었습니다.");
+                });
+
+        if (!friend.getMember().getNo().equals(user.getId())) {
+            log.error("[지인 삭제] 요청한 사용자가 잘못되었습니다. {}, {}", friend.getMember().getNo(), user.getId());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "해당 지인 삭제 권한이 없습니다.");
+        }
+
+        friendRepository.delete(friend);
     }
 }

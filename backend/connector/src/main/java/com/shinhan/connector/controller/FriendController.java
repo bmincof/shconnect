@@ -4,6 +4,7 @@ import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.FriendAddRequest;
 import com.shinhan.connector.dto.FriendAddResponse;
 import com.shinhan.connector.dto.FriendResponse;
+import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,5 +33,11 @@ public class FriendController {
     @GetMapping("/{friendNo}")
     public ResponseEntity<FriendResponse> getFriend(@PathVariable Integer friendNo, @AuthenticationPrincipal UserDetailsImpl user) {
         return ResponseEntity.ok(friendService.getFriend(friendNo, user));
+    }
+
+    @DeleteMapping("/{friendNo}")
+    public ResponseEntity<ResponseMessage> removeFriend(@PathVariable Integer friendNo, @AuthenticationPrincipal UserDetailsImpl user) {
+        friendService.removeFriend(friendNo, user);
+        return ResponseEntity.ok(new ResponseMessage("삭제가 완료되었습니다."));
     }
 }
