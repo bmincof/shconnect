@@ -4,6 +4,7 @@ import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.FriendAddRequest;
 import com.shinhan.connector.dto.FriendAddResponse;
 import com.shinhan.connector.dto.FriendResponse;
+import com.shinhan.connector.dto.FriendUpdateRequest;
 import com.shinhan.connector.entity.Friend;
 import com.shinhan.connector.entity.Member;
 import com.shinhan.connector.repository.FriendRepository;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -72,5 +74,27 @@ public class FriendService {
         }
 
         friendRepository.delete(friend);
+    }
+
+    @Transactional
+    public FriendResponse updateFriend(Integer friendNo, FriendUpdateRequest friendUpdateRequest, UserDetailsImpl user) {
+        log.info("[지인 수정] 지인 수정요청. {}, {}, {}", friendNo, friendUpdateRequest, user);
+
+        Friend friend = friendRepository.findById(friendNo).orElseThrow(() -> {
+            log.error("[지인 수정] 해당 지인을 찾을 수 없습니다. {}", friendNo);
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "지인을 찾을 수 없습니다.");
+        });
+
+        if (!friend.getMember().getNo().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "자신의 지인만 수정할 수 있습니다");
+        }
+
+        log.info("[지인 수정] 정보 업데이트");
+        friend.update(friendUpdateRequest);
+        friendRepository.save(friend);
+        friendRepository.flush();
+
+        log.info("[지인 수정] 업데이트 완료");
+        return FriendResponse.fromEntity(friend);
     }
 }
