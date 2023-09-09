@@ -1,17 +1,18 @@
 package com.shinhan.connector.service;
 
-import com.shinhan.connector.dto.ResponseMessage;
-import com.shinhan.connector.dto.ScheduleAddRequest;
-import com.shinhan.connector.dto.ScheduleAddResponse;
-import com.shinhan.connector.dto.ScheduleResponse;
+import com.shinhan.connector.config.jwt.UserDetailsImpl;
+import com.shinhan.connector.dto.*;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.repository.FriendRepository;
 import com.shinhan.connector.repository.MemberRepository;
 import com.shinhan.connector.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -45,5 +46,12 @@ public class ScheduleService {
     // 일정을 상세조회하는 메서드
     public ScheduleResponse selectSchedule(Integer scheduleNo) {
         return new ScheduleResponse(scheduleRepository.findById(scheduleNo).orElseThrow(NoSuchElementException::new));
+    }
+
+    // 일정 목록을 조회하는 메서드
+    public List<ScheduleListResponse> selectAllSchedule(UserDetailsImpl user) {
+        return scheduleRepository.findByMember(user.getId()).stream()
+                .map(ScheduleListResponse::new)
+                .collect(Collectors.toList());
     }
 }
