@@ -4,7 +4,6 @@ import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.*;
 import com.shinhan.connector.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,10 +18,11 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleAddResponse> addSchedule(ScheduleAddRequest request) {
+    public ResponseEntity<ScheduleAddResponse> addSchedule(@RequestBody ScheduleAddRequest request
+            , @AuthenticationPrincipal UserDetailsImpl user) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(scheduleService.addSchedule(request));
+                .body(scheduleService.addSchedule(request, user));
     }
 
     @DeleteMapping("/{scheduleNo}")
