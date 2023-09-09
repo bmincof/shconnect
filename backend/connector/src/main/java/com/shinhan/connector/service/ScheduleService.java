@@ -3,6 +3,7 @@ package com.shinhan.connector.service;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.ScheduleAddRequest;
 import com.shinhan.connector.dto.ScheduleAddResponse;
+import com.shinhan.connector.dto.ScheduleResponse;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.repository.FriendRepository;
 import com.shinhan.connector.repository.MemberRepository;
@@ -39,5 +40,10 @@ public class ScheduleService {
         scheduleRepository.deleteById(scheduleNo);
 
         return new ResponseMessage("삭제가 완료되었습니다.");
+    }
+
+    // 일정을 상세조회하는 메서드
+    public ScheduleResponse selectSchedule(Integer scheduleNo) {
+        return new ScheduleResponse(scheduleRepository.findById(scheduleNo).orElseThrow(NoSuchElementException::new));
     }
 }
