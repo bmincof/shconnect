@@ -14,20 +14,22 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
     // 새로운 일정을 추가하는 메서드
-    // TODO: memberId를 JWT 로직으로 변경
-    public ScheduleAddResponse addSchedule(ScheduleAddRequest request) {
+    public ScheduleAddResponse addSchedule(ScheduleAddRequest request, UserDetailsImpl user) {
+        log.info("[일정 등록] 일정등록 요청. {}, {}", request.toString(), user.getUserId());
+
         // 저장할 엔티티 생성
         Schedule schedule = request.toScheduleEntity();
         schedule.setFriend(friendRepository.findById(request.getFriendNo()).orElseThrow(NoSuchElementException::new));
-        schedule.setMember(memberRepository.findMemberById(request.getMemberId()).orElseThrow(NoSuchElementException::new));
+        schedule.setMember(memberRepository.findMemberById(user.getUserId()).orElseThrow(NoSuchElementException::new));
 
         // 생성한 엔티티 저장
         scheduleRepository.save(schedule);
