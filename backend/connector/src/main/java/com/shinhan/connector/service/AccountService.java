@@ -2,6 +2,7 @@ package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.AccountHistoryResponse;
+import com.shinhan.connector.dto.AccountResponse;
 import com.shinhan.connector.entity.Account;
 import com.shinhan.connector.entity.Member;
 import com.shinhan.connector.repository.AccountRepository;
@@ -60,6 +61,17 @@ public class AccountService {
                 }))
                 .map((history -> AccountHistoryResponse.entityToDto(history)))
                 .sorted(Comparator.comparing(AccountHistoryResponse::getDate))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<AccountResponse> getAccountList(UserDetailsImpl user) {
+        log.info("[계좌 목록 조회] 목록 조회 요청. {}", user);
+        Member member = memberRepository.findById(user.getId()).get();
+
+        log.info("[계좌 목록 조회] 목록 조회 완료");
+        return accountRepository.findByAccountHolderOrderByTypeDesc(member.getName()).stream()
+                .map(account -> AccountResponse.entityToDto(account))
                 .collect(Collectors.toList());
     }
 }
