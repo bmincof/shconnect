@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
@@ -22,8 +23,9 @@ import java.util.stream.Collectors;
 public class AccountService {
     private final AccountRepository accountRepository;
     private final MemberRepository memberRepository;
-    public List<AccountHistoryResponse> getHistory(Integer accountNo, String option, UserDetailsImpl user) {
-        log.info("[계좌내역 조회] 계좌내역조회 요청. {}, {}, {}", accountNo, option, user);
+    @Transactional
+    public List<AccountHistoryResponse> getHistory(String accountNumber, String option, UserDetailsImpl user) {
+        log.info("[계좌내역 조회] 계좌내역조회 요청. {}, {}, {}", accountNumber, option, user);
 
         if (option != null && option.contains("give")) {
             log.info("[계좌내역 조회] 송금 내역 조회");
@@ -33,7 +35,7 @@ public class AccountService {
             log.info("[계좌내역 조회] 전체 내역 조회");
         }
 
-        Account account = accountRepository.findById(accountNo).orElseThrow(() -> {
+        Account account = accountRepository.findAccountByAccountNumber(accountNumber).orElseThrow(() -> {
             log.error("[계좌내역 조회] 계좌를 찾을 수 없습니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "계좌를 찾을 수 없습니다.");
         });

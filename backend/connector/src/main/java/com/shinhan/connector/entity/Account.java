@@ -33,7 +33,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private AccountType type;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<AccountHistory> accountHistories;
 
     public void addOne() {

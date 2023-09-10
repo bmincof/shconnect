@@ -19,8 +19,8 @@ import java.util.List;
 public class AccountController {
     private final AccountService accountService;
 
-    @GetMapping("/{accountNo}/history")
-    public ResponseEntity<List<AccountHistoryResponse>> getHistory(@PathVariable Integer accountNo, String option, @AuthenticationPrincipal UserDetailsImpl user) {
-        return ResponseEntity.ok(accountService.getHistory(accountNo, option, user));
+    @GetMapping("/{accountNumber}/history")
+    public ResponseEntity<List<AccountHistoryResponse>> getHistory(@PathVariable String accountNumber, String option, @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(accountService.getHistory(accountNumber, option, user));
     }
 }

@@ -34,6 +34,7 @@ public class Member {
     private String contact;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_no")
     private Account account;
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     List<SavingsLetter> savingsLetters;
