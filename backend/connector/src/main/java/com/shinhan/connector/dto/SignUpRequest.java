@@ -17,16 +17,4 @@ public class SignUpRequest {
     String bankCode;
     String accountNumber;
 
-    public Member toEntity() {
-        return Member.builder()
-                .id(id)
-                .password(password)
-                .name(name)
-                .age(age)
-                .gender(Gender.getGender(gender))
-                .contact(contact)
-                .bankCode(bankCode)
-                .accountNumber(accountNumber)
-                .build();
-    }
 }
