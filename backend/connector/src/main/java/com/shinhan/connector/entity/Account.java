@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import java.util.List;
@@ -38,5 +40,17 @@ public class Account {
 
     public void addOne() {
         this.remainMoney++;
+    }
+
+    public void sendMoney(Long amount) {
+        if (this.remainMoney < amount) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "잔액이 부족합니다.");
+        }
+
+        this.remainMoney -= amount;
+    }
+
+    public void receiveMoney(Long amount) {
+        this.remainMoney += amount;
     }
 }
