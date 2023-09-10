@@ -15,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,5 +94,19 @@ public class AccountService {
 
         log.info("[계좌 조회] 계좌 조회 성공");
         return AccountResponse.entityToDto(account);
+    }
+
+    public Map<String, String> getAccountHolder(String accountNumber) {
+        Account account = accountRepository.findAccountByAccountNumber(accountNumber)
+                .orElseThrow(() -> {
+                    log.error("[계좌주 조회] 계좌를 찾을 수 없습니다.");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "계좌를 찾을 수 없습니다.");
+                });
+
+        Map<String, String> map = new HashMap<>();
+        map.put("accountHolder", account.getAccountHolder());
+
+        log.info("[계좌주 조회] 계좌주 이름 반환. {}", account.getAccountHolder());
+        return map;
     }
 }

@@ -7,12 +7,10 @@ import com.shinhan.connector.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +31,10 @@ public class AccountController {
     @GetMapping("/{accountNumber}")
     public ResponseEntity<AccountResponse> getAccount(@PathVariable String accountNumber, @AuthenticationPrincipal UserDetailsImpl user) {
         return ResponseEntity.ok(accountService.getAccount(accountNumber, user));
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, String>> getAccountHolder(@RequestParam(name = "account-number") String accountNumber) {
+        return ResponseEntity.ok(accountService.getAccountHolder(accountNumber));
     }
 }
