@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -22,6 +23,8 @@ public class TributeSend {
     private Long amount;
     @Column(columnDefinition = "text")
     private String note;
+    @ColumnDefault("false")
+    private Boolean sent;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_no")

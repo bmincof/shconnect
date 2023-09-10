@@ -3,12 +3,15 @@ package com.shinhan.connector.controller;
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.AccountHistoryResponse;
 import com.shinhan.connector.dto.AccountResponse;
+import com.shinhan.connector.dto.ResponseMessage;
+import com.shinhan.connector.dto.SendMoneyRequest;
 import com.shinhan.connector.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
@@ -36,5 +39,10 @@ public class AccountController {
     @GetMapping
     public ResponseEntity<Map<String, String>> getAccountHolder(@RequestParam(name = "account-number") String accountNumber) {
         return ResponseEntity.ok(accountService.getAccountHolder(accountNumber));
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseMessage> sendMoney(@RequestBody SendMoneyRequest sendMoneyRequest, @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(accountService.sendMoney(sendMoneyRequest, user));
     }
 }
