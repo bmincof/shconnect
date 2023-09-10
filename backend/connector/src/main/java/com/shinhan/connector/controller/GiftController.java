@@ -3,6 +3,7 @@ package com.shinhan.connector.controller;
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.GiftAddRequest;
 import com.shinhan.connector.dto.GiftAddResponse;
+import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.service.GiftService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,5 +24,10 @@ public class GiftController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(giftService.createGift(giftAddRequest, option, user));
+    }
+
+    @DeleteMapping("{giftNo}")
+    public ResponseEntity<ResponseMessage> deleteGift(@PathVariable Integer giftNo, @RequestParam String option) {
+        return ResponseEntity.ok(giftService.deleteGift(giftNo, option));
     }
 }
