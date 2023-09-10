@@ -17,3 +17,9 @@ INSERT INTO FRIEND (FRIEND_NO, ACCOUNT_NUMBER, BANK_CODE, BELONG, CONTACT, IMAGE
 VALUES (100000, '456789123456', '088', '신기한모임', '987654321', '이미지.jpg', '김친구', 'FRIEND', 100000),
 (100001, '852285228852', '088', '또다른모임', '987654321', '이미지.jpg', '박친구', 'FRIEND', 100000),
 (100002, '891385789133', '088', '이건모임', '987654321', '이미지.jpg', '김거래', 'BUSINESS', 100000);
+
+INSERT INTO SCHEDULE (schedule_no, friend_no, name, category, date, repeat_cycle, content, alarm, favorite, member_no)
+VALUES (100000, 100000, '새로운일정', '결혼식', 1646643307, 'NONE', null, 'NONE', 'false', 100000);
+
+INSERT INTO MY_SCHEDULE (my_schedule_no, name, category, date, repeat_cycle, content, alarm, favorite, member_no)
+VALUES (100000, '새로운 내 일정', '집들이', 1646643307, 'WEEK', '집들이 화이팅', 'MONTH', 'TRUE', 100000)
