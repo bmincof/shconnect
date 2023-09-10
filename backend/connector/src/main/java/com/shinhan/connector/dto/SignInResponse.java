@@ -13,8 +13,7 @@ public class SignInResponse {
     Integer age;
     String gender;
     String contact;
-    String bankCode;
-    String accountNumber;
+    Integer accountNo;
 
     public static SignInResponse entityToDto(Member member) {
         return SignInResponse.builder()
@@ -24,8 +23,7 @@ public class SignInResponse {
                 .age(member.getAge())
                 .gender(member.getGender().getValue())
                 .contact(member.getContact())
-                .bankCode(member.getBankCode())
-                .accountNumber(member.getAccountNumber())
+                .accountNo(member.getAccount().getNo())
                 .build();
     }
 }

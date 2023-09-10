@@ -49,7 +49,7 @@ public class MemberController {
 
     // 1원 송금 체크
     @PostMapping("/1transfer/check")
-    public ResponseEntity<TransferOneCheckResponse> transferOne(@RequestBody TransferOneCheckRequest transferOneCheckRequest) {
+    public ResponseEntity<ResponseMessage> transferOne(@RequestBody TransferOneCheckRequest transferOneCheckRequest) {
         return ResponseEntity.ok(memberService.transfer1Check(transferOneCheckRequest));
     }
     
