@@ -3,6 +3,7 @@ package com.shinhan.connector.service;
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.GiftAddRequest;
 import com.shinhan.connector.dto.GiftAddResponse;
+import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.entity.GiftSend;
 import com.shinhan.connector.repository.GiftReceiveRepository;
 import com.shinhan.connector.repository.GiftSendRepository;
@@ -37,6 +38,18 @@ public class GiftService {
             return GiftAddResponse.fromGiftSendEntity(gift);
         // 받은 선물이면
         } else if (options.equals("receive")){
+            return null;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Transactional
+    public ResponseMessage deleteGift(Integer giftNo, String option) {
+        if (option.equals("give")) {
+            giftSendRepository.deleteById(giftNo);
+            return new ResponseMessage("삭제가 완료되었습니다.");
+        } else if (option.equals("receive")) {
             return null;
         } else {
             throw new IllegalArgumentException();
