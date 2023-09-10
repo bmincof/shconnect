@@ -43,10 +43,6 @@ public class MemberService {
     private final AccountHistoryRepository accountHistoryRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    @Value("${shb.url}")
-    private String bankUrl;
-    @Value("${shb.api_key}")
-    private String apiKey;
     private Map<String, String> transfer1Check = new HashMap<>();
     private Set<String> transferChecked = new HashSet<>();
     private final String CHECK_NUMBER = "1234";

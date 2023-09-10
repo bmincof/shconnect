@@ -2,6 +2,7 @@ package com.shinhan.connector.controller;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.AccountHistoryResponse;
+import com.shinhan.connector.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,8 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/account")
 public class AccountController {
+    private final AccountService accountService;
+
     @GetMapping("/{accountNo}/history")
-    public ResponseEntity<List<AccountHistoryResponse>> getHistory(@PathVariable Integer accountNo, @AuthenticationPrincipal UserDetailsImpl user) {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<List<AccountHistoryResponse>> getHistory(@PathVariable Integer accountNo, String option, @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(accountService.getHistory(accountNo, option, user));
     }
 }
