@@ -29,4 +29,9 @@ public class AccountController {
     public ResponseEntity<List<AccountResponse>> getAccountList(@AuthenticationPrincipal UserDetailsImpl user) {
         return ResponseEntity.ok(accountService.getAccountList(user));
     }
+
+    @GetMapping("/{accountNumber}")
+    public ResponseEntity<AccountResponse> getAccount(@PathVariable String accountNumber, @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(accountService.getAccount(accountNumber, user));
+    }
 }

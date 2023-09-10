@@ -74,4 +74,23 @@ public class AccountService {
                 .map(account -> AccountResponse.entityToDto(account))
                 .collect(Collectors.toList());
     }
+
+    public AccountResponse getAccount(String accountNumber, UserDetailsImpl user) {
+        log.info("[계좌 조회] 계좌 조회 요청. {}", accountNumber, user);
+        Member member = memberRepository.findById(user.getId()).get();
+
+        Account account = accountRepository.findAccountByAccountNumber(accountNumber)
+                .orElseThrow(() -> {
+                    log.error("[계좌 조회] 잘못된 계좌번호입니다.");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 계좌정보입니다.");
+                });
+
+        if (!account.getAccountHolder().equals(member.getName())) {
+            log.error("[계좌 조회] 자신의 계좌만 접근 가능합니다. {}", account.getAccountHolder());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "자신의 계좌만 접근 가능");
+        }
+
+        log.info("[계좌 조회] 계좌 조회 성공");
+        return AccountResponse.entityToDto(account);
+    }
 }
