@@ -32,12 +32,10 @@ public class Member {
     private Gender gender;
     @Column(length = 50, nullable = false)
     private String contact;
-    @Column(name = "bank_code", length = 10, nullable = false)
-    private String bankCode;
-    @Column(name = "account_number", length = 100, unique = true)
-    private String accountNumber;
 
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_no")
+    private Account account;
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     List<SavingsLetter> savingsLetters;
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
