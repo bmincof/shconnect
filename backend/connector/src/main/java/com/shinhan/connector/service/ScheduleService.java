@@ -9,6 +9,7 @@ import com.shinhan.connector.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,8 +24,11 @@ public class ScheduleService {
     private final MemberRepository memberRepository;
 
     // 새로운 일정을 추가하는 메서드
+    @Transactional
     public ScheduleAddResponse addSchedule(ScheduleAddRequest request, UserDetailsImpl user) {
         log.info("[일정 등록] 일정등록 요청. {}, {}", request.toString(), user.getUserId());
+
+        // TODO: request의 friendNo가 null이면 MySchedule에 추가
 
         // 저장할 엔티티 생성
         Schedule schedule = request.toScheduleEntity();
@@ -39,21 +43,26 @@ public class ScheduleService {
         return new ScheduleAddResponse(schedule);
     }
 
+    @Transactional
     public ResponseMessage deleteSchedule(Integer scheduleNo) {
         scheduleRepository.deleteById(scheduleNo);
 
         return new ResponseMessage("삭제가 완료되었습니다.");
     }
 
+    @Transactional(readOnly = true)
     // 일정을 상세조회하는 메서드
     public ScheduleResponse selectSchedule(Integer scheduleNo) {
         return new ScheduleResponse(scheduleRepository.findById(scheduleNo).orElseThrow(NoSuchElementException::new));
     }
 
     // 일정 목록을 조회하는 메서드
+    @Transactional(readOnly = true)
     public List<ScheduleListResponse> selectAllSchedule(UserDetailsImpl user) {
         return scheduleRepository.findByMember(user.getId()).stream()
                 .map(ScheduleListResponse::new)
                 .collect(Collectors.toList());
     }
+
+    //TODO: 일정 수정 메서드 추가
 }
