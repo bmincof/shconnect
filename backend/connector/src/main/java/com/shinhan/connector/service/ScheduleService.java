@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -83,9 +84,19 @@ public class ScheduleService {
     // 일정 목록을 조회하는 메서드
     @Transactional(readOnly = true)
     public List<ScheduleListResponse> selectAllSchedule(UserDetailsImpl user) {
-        return scheduleRepository.findByMember(user.getId()).stream()
-                .map(ScheduleListResponse::new)
+        // 일정 목록 모두 불러오기
+        List<ScheduleListResponse> schedules = scheduleRepository.findByMember(user.getId()).stream()
+                .map(ScheduleListResponse::fromScheduleEntity)
                 .collect(Collectors.toList());
+        // 내 일정 목록 모두 불러와서 추가하기
+        schedules.addAll(myScheduleRepository.findByMember(user.getId()).stream()
+                .map(ScheduleListResponse::fromMyScheduleEntity)
+                .collect(Collectors.toList()));
+
+        // 최근 날짜부터 조회
+        schedules.sort(Comparator.comparing(ScheduleListResponse::getDate, Comparator.reverseOrder()));
+
+        return schedules;
     }
 
     //TODO: 일정 수정 메서드 추가

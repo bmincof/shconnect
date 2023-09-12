@@ -36,6 +36,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.selectSchedule(scheduleNo, option));
     }
 
+    // TODO: 검색 날짜 범위 추가, 정렬 기준 추가
     // 일정 목록 조회
     @GetMapping("/list")
     public ResponseEntity<List<ScheduleListResponse>> getSchedules(@AuthenticationPrincipal UserDetailsImpl user) {
