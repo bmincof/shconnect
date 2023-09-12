@@ -2,9 +2,11 @@ package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.*;
+import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.repository.FriendRepository;
 import com.shinhan.connector.repository.MemberRepository;
+import com.shinhan.connector.repository.MyScheduleRepository;
 import com.shinhan.connector.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final MyScheduleRepository myScheduleRepository;
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
@@ -28,19 +31,30 @@ public class ScheduleService {
     public ScheduleAddResponse addSchedule(ScheduleAddRequest request, UserDetailsImpl user) {
         log.info("[일정 등록] 일정등록 요청. {}, {}", request.toString(), user.getUserId());
 
-        // TODO: request의 friendNo가 null이면 MySchedule에 추가
+        if (request.getFriendNo() == null) {
+            // 저장할 엔티티 생성
+            MySchedule mySchedule = request.toMyScheduleEntity();
+            mySchedule.setMember(memberRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new));
 
-        // 저장할 엔티티 생성
-        Schedule schedule = request.toScheduleEntity();
-        schedule.setFriend(friendRepository.findById(request.getFriendNo()).orElseThrow(NoSuchElementException::new));
-        schedule.setMember(memberRepository.findMemberById(user.getUserId()).orElseThrow(NoSuchElementException::new));
+            // 생성한 엔티티 저장
+            myScheduleRepository.save(mySchedule);
+            myScheduleRepository.flush();
 
-        // 생성한 엔티티 저장
-        scheduleRepository.save(schedule);
-        scheduleRepository.flush();
+            // API 응답 생성
+            return ScheduleAddResponse.fromMyScheduleEntity(mySchedule);
+        } else {
+            // 저장할 엔티티 생성
+            Schedule schedule = request.toScheduleEntity();
+            schedule.setFriend(friendRepository.findById(request.getFriendNo()).orElseThrow(NoSuchElementException::new));
+            schedule.setMember(memberRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new));
 
-        // API 응답 생성
-        return new ScheduleAddResponse(schedule);
+            // 생성한 엔티티 저장
+            scheduleRepository.save(schedule);
+            scheduleRepository.flush();
+
+            // API 응답 생성
+            return ScheduleAddResponse.fromScheduleEntity(schedule);
+        }
     }
 
     @Transactional
