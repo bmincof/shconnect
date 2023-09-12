@@ -58,8 +58,12 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ResponseMessage deleteSchedule(Integer scheduleNo) {
-        scheduleRepository.deleteById(scheduleNo);
+    public ResponseMessage deleteSchedule(Integer scheduleNo, String option) {
+        if (option.equals("mine")) {
+            myScheduleRepository.deleteById(scheduleNo);
+        } else {
+            scheduleRepository.deleteById(scheduleNo);
+        }
 
         return new ResponseMessage("삭제가 완료되었습니다.");
     }

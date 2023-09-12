@@ -25,12 +25,9 @@ public class ScheduleController {
                 .body(scheduleService.addSchedule(request, user));
     }
 
-    // TODO: option으로 내 일정인지 구분하기
     @DeleteMapping("/{scheduleNo}")
-    public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable Integer scheduleNo) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(scheduleService.deleteSchedule(scheduleNo));
+    public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable Integer scheduleNo, @RequestParam String option) {
+        return ResponseEntity.ok(scheduleService.deleteSchedule(scheduleNo, option));
     }
 
     // TODO: option으로 내 일정인지 구분하기
