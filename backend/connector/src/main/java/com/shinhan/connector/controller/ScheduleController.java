@@ -30,13 +30,10 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.deleteSchedule(scheduleNo, option));
     }
 
-    // TODO: option으로 내 일정인지 구분하기
     // 일정 상세 조회
     @GetMapping("/{scheduleNo}")
-    public ResponseEntity<ScheduleResponse> getScheduleDetail(@PathVariable Integer scheduleNo) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(scheduleService.selectSchedule(scheduleNo));
+    public ResponseEntity<ScheduleResponse> getScheduleDetail(@PathVariable Integer scheduleNo, @RequestParam String option) {
+        return ResponseEntity.ok(scheduleService.selectSchedule(scheduleNo, option));
     }
 
     // 일정 목록 조회

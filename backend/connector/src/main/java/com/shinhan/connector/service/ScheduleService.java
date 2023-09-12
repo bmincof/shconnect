@@ -70,8 +70,14 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     // 일정을 상세조회하는 메서드
-    public ScheduleResponse selectSchedule(Integer scheduleNo) {
-        return new ScheduleResponse(scheduleRepository.findById(scheduleNo).orElseThrow(NoSuchElementException::new));
+    public ScheduleResponse selectSchedule(Integer scheduleNo, String option) {
+        if (option.equals("mine")) {
+            return ScheduleResponse.fromMyScheduleEntity(myScheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new));
+        } else {
+            return new ScheduleResponse(scheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new));
+        }
     }
 
     // 일정 목록을 조회하는 메서드
