@@ -26,20 +26,17 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{scheduleNo}")
-    public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable Integer scheduleNo) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(scheduleService.deleteSchedule(scheduleNo));
+    public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable Integer scheduleNo, @RequestParam String option) {
+        return ResponseEntity.ok(scheduleService.deleteSchedule(scheduleNo, option));
     }
 
     // 일정 상세 조회
     @GetMapping("/{scheduleNo}")
-    public ResponseEntity<ScheduleResponse> getScheduleDetail(@PathVariable Integer scheduleNo) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(scheduleService.selectSchedule(scheduleNo));
+    public ResponseEntity<ScheduleResponse> getScheduleDetail(@PathVariable Integer scheduleNo, @RequestParam String option) {
+        return ResponseEntity.ok(scheduleService.selectSchedule(scheduleNo, option));
     }
 
+    // TODO: 검색 날짜 범위 추가, 정렬 기준 추가
     // 일정 목록 조회
     @GetMapping("/list")
     public ResponseEntity<List<ScheduleListResponse>> getSchedules(@AuthenticationPrincipal UserDetailsImpl user) {

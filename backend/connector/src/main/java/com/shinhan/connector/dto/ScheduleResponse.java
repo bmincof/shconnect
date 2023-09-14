@@ -1,11 +1,14 @@
 package com.shinhan.connector.dto;
 
+import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class ScheduleResponse {
     private Integer scheduleNo;
     private Integer friendNo;
@@ -24,5 +27,28 @@ public class ScheduleResponse {
         this.repeatCycle = schedule.getRepeatCycle();
         this.favorite = schedule.getFavorite();
         this.alarm = schedule.getAlarm();
+    }
+
+    public static ScheduleResponse fromScheduleEntity(Schedule schedule) {
+        return ScheduleResponse.builder()
+                .scheduleNo(schedule.getNo())
+                .friendNo(schedule.getFriend().getNo())
+                .name(schedule.getName())
+                .date(schedule.getDate())
+                .repeatCycle(schedule.getRepeatCycle())
+                .favorite(schedule.getFavorite())
+                .alarm(schedule.getAlarm())
+                .build();
+    }
+
+    public static ScheduleResponse fromMyScheduleEntity(MySchedule mySchedule) {
+        return ScheduleResponse.builder()
+                .scheduleNo(mySchedule.getNo())
+                .name(mySchedule.getName())
+                .date(mySchedule.getDate())
+                .repeatCycle(mySchedule.getRepeatCycle())
+                .favorite(mySchedule.getFavorite())
+                .alarm(mySchedule.getAlarm())
+                .build();
     }
 }
