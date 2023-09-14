@@ -22,4 +22,10 @@ INSERT INTO SCHEDULE (schedule_no, friend_no, name, category, date, repeat_cycle
 VALUES (100000, 100000, '새로운일정', '결혼식', 1646643307, 'NONE', null, 'NONE', 'false', 100000);
 
 INSERT INTO MY_SCHEDULE (my_schedule_no, name, category, date, repeat_cycle, content, alarm, favorite, member_no)
-VALUES (100000, '새로운 내 일정', '집들이', 1646643307, 'WEEK', '집들이 화이팅', 'MONTH', 'TRUE', 100000)
+VALUES (100000, '새로운 내 일정', '집들이', 1646643307, 'WEEK', '집들이 화이팅', 'MONTH', 'TRUE', 100000);
+
+INSERT INTO TRIBUTE_SEND (tribute_send_no, amount, note, sent, schedule_no)
+VALUES (100000, 50000, '보낼 경조사비', 'false', 100000);
+
+INSERT INTO TRIBUTE_RECEIVE (tribute_receive_no, amount, note, friend_no, my_schedule_no)
+VALUES (100000, 50000, '받은 경조사비', 100000, 100000);

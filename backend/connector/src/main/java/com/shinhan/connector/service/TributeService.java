@@ -82,4 +82,25 @@ public class TributeService {
 
         return TributeResponse.entityToDto(tribute);
     }
+
+    public TributeResponse getDetail(String option, Integer tributeNo) {
+        log.info("[경조사비 상세조회] 경조사비 상세조회. {}, {}", option, tributeNo);
+
+        Object tribute = null;
+        if (option.contains("give")) {
+            tribute = tributeSendRepository.findById(tributeNo)
+                    .orElseThrow(() -> {
+                        log.error("[경조사비 상세조회] 경조사비 번호가 잘못되었습니다.");
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "경조사비 번호가 잘못되었습니다.");
+                    });
+        } else {
+            tribute = tributeReceiveRepository.findById(tributeNo)
+                    .orElseThrow(() -> {
+                        log.error("[경조사비 상세조회] 경조사비 번호가 잘못되었습니다.");
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "경조사비 번호가 잘못되었습니다.");
+                    });
+        }
+        log.info("[경조사비 상세조회] 상세조회 완료.");
+        return TributeResponse.entityToDto(tribute);
+    }
 }
