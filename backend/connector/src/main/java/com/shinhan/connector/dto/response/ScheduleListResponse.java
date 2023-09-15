@@ -1,4 +1,4 @@
-package com.shinhan.connector.dto;
+package com.shinhan.connector.dto.response;
 
 import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
@@ -7,44 +7,41 @@ import com.shinhan.connector.enums.RepeatCycle;
 import lombok.Builder;
 import lombok.Data;
 
+// 일정 목록을 조회했을 때 반환할 응답
 @Data
 @Builder
-public class ScheduleAddResponse {
+public class ScheduleListResponse {
     private Integer scheduleNo;
-    private Integer friendNo;
     private String name;
-    private String category;
-    private Long date;
     private String content;
+    private Long date;
     private RepeatCycle repeatCycle;
     private Boolean favorite;
     private Alarm alarm;
+    private FriendResponse friend;
 
-    public static ScheduleAddResponse fromScheduleEntity(Schedule schedule) {
-        return ScheduleAddResponse.builder()
+    public static ScheduleListResponse fromScheduleEntity(Schedule schedule) {
+        return ScheduleListResponse.builder()
                 .scheduleNo(schedule.getNo())
-                .friendNo(schedule.getFriend().getNo())
                 .name(schedule.getName())
-                .category(schedule.getCategory())
-                .date(schedule.getDate())
                 .content(schedule.getContent())
+                .date(schedule.getDate())
                 .repeatCycle(schedule.getRepeatCycle())
                 .favorite(schedule.getFavorite())
                 .alarm(schedule.getAlarm())
+                .friend(FriendResponse.fromEntity(schedule.getFriend()))
                 .build();
     }
 
-    public static ScheduleAddResponse fromMyScheduleEntity(MySchedule mySchedule) {
-        return ScheduleAddResponse.builder()
+    public static ScheduleListResponse fromMyScheduleEntity(MySchedule mySchedule) {
+        return ScheduleListResponse.builder()
                 .scheduleNo(mySchedule.getNo())
                 .name(mySchedule.getName())
-                .category(mySchedule.getCategory())
-                .date(mySchedule.getDate())
                 .content(mySchedule.getContent())
+                .date(mySchedule.getDate())
                 .repeatCycle(mySchedule.getRepeatCycle())
                 .favorite(mySchedule.getFavorite())
                 .alarm(mySchedule.getAlarm())
                 .build();
     }
-
 }

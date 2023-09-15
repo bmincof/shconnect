@@ -1,17 +1,16 @@
 package com.shinhan.connector.controller;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.AccountHistoryResponse;
-import com.shinhan.connector.dto.AccountResponse;
+import com.shinhan.connector.dto.response.AccountHistoryResponse;
+import com.shinhan.connector.dto.response.AccountResponse;
 import com.shinhan.connector.dto.ResponseMessage;
-import com.shinhan.connector.dto.SendMoneyRequest;
+import com.shinhan.connector.dto.request.SendMoneyRequest;
 import com.shinhan.connector.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 

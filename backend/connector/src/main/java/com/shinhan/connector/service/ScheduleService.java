@@ -2,6 +2,10 @@ package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.*;
+import com.shinhan.connector.dto.request.ScheduleAddRequest;
+import com.shinhan.connector.dto.response.ScheduleAddResponse;
+import com.shinhan.connector.dto.response.ScheduleListResponse;
+import com.shinhan.connector.dto.response.ScheduleResponse;
 import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.repository.FriendRepository;

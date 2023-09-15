@@ -1,43 +1,52 @@
-package com.shinhan.connector.dto;
+package com.shinhan.connector.dto.response;
 
 import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-// 일정 목록을 조회했을 때 반환할 응답
 @Data
 @Builder
-public class ScheduleListResponse {
+@AllArgsConstructor
+public class ScheduleResponse {
     private Integer scheduleNo;
+    private Integer friendNo;
     private String name;
     private String content;
     private Long date;
     private RepeatCycle repeatCycle;
     private Boolean favorite;
     private Alarm alarm;
-    private FriendResponse friend;
 
-    public static ScheduleListResponse fromScheduleEntity(Schedule schedule) {
-        return ScheduleListResponse.builder()
+    public ScheduleResponse(Schedule schedule) {
+        this.scheduleNo = schedule.getNo();
+        this.friendNo = schedule.getFriend().getNo();
+        this.name = schedule.getName();
+        this.date = schedule.getDate();
+        this.repeatCycle = schedule.getRepeatCycle();
+        this.favorite = schedule.getFavorite();
+        this.alarm = schedule.getAlarm();
+    }
+
+    public static ScheduleResponse fromScheduleEntity(Schedule schedule) {
+        return ScheduleResponse.builder()
                 .scheduleNo(schedule.getNo())
+                .friendNo(schedule.getFriend().getNo())
                 .name(schedule.getName())
-                .content(schedule.getContent())
                 .date(schedule.getDate())
                 .repeatCycle(schedule.getRepeatCycle())
                 .favorite(schedule.getFavorite())
                 .alarm(schedule.getAlarm())
-                .friend(FriendResponse.fromEntity(schedule.getFriend()))
                 .build();
     }
 
-    public static ScheduleListResponse fromMyScheduleEntity(MySchedule mySchedule) {
-        return ScheduleListResponse.builder()
+    public static ScheduleResponse fromMyScheduleEntity(MySchedule mySchedule) {
+        return ScheduleResponse.builder()
                 .scheduleNo(mySchedule.getNo())
                 .name(mySchedule.getName())
-                .content(mySchedule.getContent())
                 .date(mySchedule.getDate())
                 .repeatCycle(mySchedule.getRepeatCycle())
                 .favorite(mySchedule.getFavorite())

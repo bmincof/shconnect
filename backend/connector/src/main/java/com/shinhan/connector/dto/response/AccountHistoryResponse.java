@@ -1,4 +1,4 @@
-package com.shinhan.connector.dto;
+package com.shinhan.connector.dto.response;
 
 import com.shinhan.connector.entity.AccountHistory;
 import lombok.Builder;

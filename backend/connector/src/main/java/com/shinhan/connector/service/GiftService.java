@@ -1,9 +1,9 @@
 package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.GiftAddRequest;
-import com.shinhan.connector.dto.GiftAddResponse;
-import com.shinhan.connector.dto.GiftSendResponse;
+import com.shinhan.connector.dto.request.GiftAddRequest;
+import com.shinhan.connector.dto.response.GiftAddResponse;
+import com.shinhan.connector.dto.response.GiftSendResponse;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.entity.GiftSend;
 import com.shinhan.connector.repository.GiftReceiveRepository;

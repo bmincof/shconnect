@@ -1,10 +1,10 @@
 package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.FriendAddRequest;
-import com.shinhan.connector.dto.FriendAddResponse;
-import com.shinhan.connector.dto.FriendResponse;
-import com.shinhan.connector.dto.FriendUpdateRequest;
+import com.shinhan.connector.dto.request.FriendAddRequest;
+import com.shinhan.connector.dto.response.FriendAddResponse;
+import com.shinhan.connector.dto.response.FriendResponse;
+import com.shinhan.connector.dto.request.FriendUpdateRequest;
 import com.shinhan.connector.entity.Friend;
 import com.shinhan.connector.entity.Member;
 import com.shinhan.connector.repository.FriendRepository;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
