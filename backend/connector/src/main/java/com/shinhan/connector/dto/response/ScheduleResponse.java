@@ -21,21 +21,12 @@ public class ScheduleResponse {
     private Boolean favorite;
     private Alarm alarm;
 
-    public ScheduleResponse(Schedule schedule) {
-        this.scheduleNo = schedule.getNo();
-        this.friendNo = schedule.getFriend().getNo();
-        this.name = schedule.getName();
-        this.date = schedule.getDate();
-        this.repeatCycle = schedule.getRepeatCycle();
-        this.favorite = schedule.getFavorite();
-        this.alarm = schedule.getAlarm();
-    }
-
     public static ScheduleResponse fromScheduleEntity(Schedule schedule) {
         return ScheduleResponse.builder()
                 .scheduleNo(schedule.getNo())
                 .friendNo(schedule.getFriend().getNo())
                 .name(schedule.getName())
+                .content(schedule.getContent())
                 .date(schedule.getDate())
                 .repeatCycle(schedule.getRepeatCycle())
                 .favorite(schedule.getFavorite())
@@ -47,6 +38,7 @@ public class ScheduleResponse {
         return ScheduleResponse.builder()
                 .scheduleNo(mySchedule.getNo())
                 .name(mySchedule.getName())
+                .content(mySchedule.getContent())
                 .date(mySchedule.getDate())
                 .repeatCycle(mySchedule.getRepeatCycle())
                 .favorite(mySchedule.getFavorite())

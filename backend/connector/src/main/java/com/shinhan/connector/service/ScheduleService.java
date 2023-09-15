@@ -1,7 +1,7 @@
 package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.*;
+import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.ScheduleAddRequest;
 import com.shinhan.connector.dto.response.ScheduleAddResponse;
 import com.shinhan.connector.dto.response.ScheduleListResponse;
@@ -76,12 +76,14 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     // 일정을 상세조회하는 메서드
     public ScheduleResponse selectSchedule(Integer scheduleNo, String option) {
-        if (option.equals("mine")) {
+        if (option == null) {
+            return ScheduleResponse.fromScheduleEntity(scheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new));
+        } else if (option.equals("mine")){
             return ScheduleResponse.fromMyScheduleEntity(myScheduleRepository.findById(scheduleNo)
                     .orElseThrow(NoSuchElementException::new));
         } else {
-            return new ScheduleResponse(scheduleRepository.findById(scheduleNo)
-                    .orElseThrow(NoSuchElementException::new));
+            throw new NoSuchElementException();
         }
     }
 
