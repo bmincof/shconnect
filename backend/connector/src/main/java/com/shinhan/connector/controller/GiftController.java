@@ -21,7 +21,7 @@ public class GiftController {
     private final GiftService giftService;
 
     @PostMapping
-    public ResponseEntity<GiftAddResponse> createGift(@RequestBody GiftAddRequest giftAddRequest,
+    public ResponseEntity<? extends GiftAddResponse> createGift(@RequestBody GiftAddRequest giftAddRequest,
                                                       @RequestParam String option,
                                                       @AuthenticationPrincipal UserDetailsImpl user) {
         return ResponseEntity
@@ -46,4 +46,8 @@ public class GiftController {
         return ResponseEntity.ok(giftService.getAllGift(option, friendNo, user));
     }
 
+    @PutMapping("/{giftNo}")
+    public ResponseEntity<? extends GiftResponse> modifyGift(@PathVariable Integer giftNo, @RequestParam String option) {
+        return null;
+    }
 }
