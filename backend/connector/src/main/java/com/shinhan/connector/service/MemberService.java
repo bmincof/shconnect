@@ -1,10 +1,15 @@
 package com.shinhan.connector.service;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.shinhan.connector.config.jwt.JwtUtils;
 import com.shinhan.connector.config.jwt.Token;
 import com.shinhan.connector.dto.*;
+import com.shinhan.connector.dto.request.SignInRequest;
+import com.shinhan.connector.dto.request.SignUpRequest;
+import com.shinhan.connector.dto.request.TransferOneCheckRequest;
+import com.shinhan.connector.dto.request.TransferOneRequest;
+import com.shinhan.connector.dto.response.SignInResponse;
+import com.shinhan.connector.dto.response.TokenAndMemberResponse;
 import com.shinhan.connector.entity.Account;
 import com.shinhan.connector.entity.AccountHistory;
 import com.shinhan.connector.entity.Member;
@@ -13,24 +18,14 @@ import com.shinhan.connector.repository.AccountHistoryRepository;
 import com.shinhan.connector.repository.AccountRepository;
 import com.shinhan.connector.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 @Service

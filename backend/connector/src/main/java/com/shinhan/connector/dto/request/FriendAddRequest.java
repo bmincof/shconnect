@@ -1,4 +1,4 @@
-package com.shinhan.connector.dto;
+package com.shinhan.connector.dto.request;
 
 import com.shinhan.connector.entity.Friend;
 import com.shinhan.connector.entity.Member;

@@ -2,6 +2,10 @@ package com.shinhan.connector.controller;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.*;
+import com.shinhan.connector.dto.request.FriendAddRequest;
+import com.shinhan.connector.dto.request.FriendUpdateRequest;
+import com.shinhan.connector.dto.response.FriendAddResponse;
+import com.shinhan.connector.dto.response.FriendResponse;
 import com.shinhan.connector.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

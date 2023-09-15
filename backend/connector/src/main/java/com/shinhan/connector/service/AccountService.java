@@ -1,10 +1,10 @@
 package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.AccountHistoryResponse;
-import com.shinhan.connector.dto.AccountResponse;
+import com.shinhan.connector.dto.response.AccountHistoryResponse;
+import com.shinhan.connector.dto.response.AccountResponse;
 import com.shinhan.connector.dto.ResponseMessage;
-import com.shinhan.connector.dto.SendMoneyRequest;
+import com.shinhan.connector.dto.request.SendMoneyRequest;
 import com.shinhan.connector.entity.Account;
 import com.shinhan.connector.entity.AccountHistory;
 import com.shinhan.connector.entity.Member;

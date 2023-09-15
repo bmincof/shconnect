@@ -2,6 +2,10 @@ package com.shinhan.connector.controller;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.*;
+import com.shinhan.connector.dto.request.ScheduleAddRequest;
+import com.shinhan.connector.dto.response.ScheduleAddResponse;
+import com.shinhan.connector.dto.response.ScheduleListResponse;
+import com.shinhan.connector.dto.response.ScheduleResponse;
 import com.shinhan.connector.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

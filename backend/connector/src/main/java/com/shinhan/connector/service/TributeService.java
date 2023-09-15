@@ -1,8 +1,8 @@
 package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.TributeRegistRequest;
-import com.shinhan.connector.dto.TributeResponse;
+import com.shinhan.connector.dto.request.TributeRegistRequest;
+import com.shinhan.connector.dto.response.TributeResponse;
 import com.shinhan.connector.entity.*;
 import com.shinhan.connector.repository.*;
 import lombok.RequiredArgsConstructor;

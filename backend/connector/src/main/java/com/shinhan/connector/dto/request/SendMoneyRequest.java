@@ -1,4 +1,4 @@
-package com.shinhan.connector.dto;
+package com.shinhan.connector.dto.request;
 
 import lombok.Builder;
 import lombok.Data;
