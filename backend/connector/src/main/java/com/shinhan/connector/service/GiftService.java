@@ -2,10 +2,7 @@ package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.request.GiftAddRequest;
-import com.shinhan.connector.dto.response.GiftAddResponse;
-import com.shinhan.connector.dto.response.GiftReceiveResponse;
-import com.shinhan.connector.dto.response.GiftResponse;
-import com.shinhan.connector.dto.response.GiftSendResponse;
+import com.shinhan.connector.dto.response.*;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.entity.GiftReceive;
 import com.shinhan.connector.entity.GiftSend;
@@ -31,8 +28,6 @@ public class GiftService {
     private final ScheduleRepository scheduleRepository;
     private final MyScheduleRepository myScheduleRepository;
 
-    //TODO: 받은 선물 로직 추가
-
     @Transactional
     public GiftAddResponse createGift(GiftAddRequest giftAddRequest, String options, UserDetailsImpl user) {
         log.info("[선물 등록] 선물등록 요청. {}, {}", giftAddRequest.toString(), user.getUserId());
@@ -45,8 +40,8 @@ public class GiftService {
             giftSendRepository.save(gift);
             giftSendRepository.flush();
 
-            return GiftAddResponse.fromGiftSendEntity(gift);
-        // 받은 선물이면
+            return new GiftSendAddResponse(gift);
+            // 받은 선물이면
         } else if (options.equals("receive")){
 
             GiftReceive gift = giftAddRequest.toGiftReceiveEntity();
@@ -55,8 +50,7 @@ public class GiftService {
             giftReceiveRepository.save(gift);
             giftReceiveRepository.flush();
 
-//            return GiftAddResponse.fromGiftSendEntity(gift);
-            return null;
+            return new GiftReceiveAddResponse(gift);
         } else {
             throw new IllegalArgumentException();
         }
@@ -64,6 +58,7 @@ public class GiftService {
 
     @Transactional
     public ResponseMessage deleteGift(Integer giftNo, String option) {
+        log.info("[선물 삭제] 선물삭제 요청. {}, {}", giftNo, option);
         if (option.equals("give")) {
             giftSendRepository.deleteById(giftNo);
             return new ResponseMessage("삭제가 완료되었습니다.");
@@ -77,6 +72,7 @@ public class GiftService {
 
     @Transactional(readOnly = true)
     public GiftResponse getGift(Integer giftNo, String option) {
+        log.info("[선물 조회] 선물 상세조회 요청. {}, {}", giftNo, option);
         if (option.equals("give")) {
             return new GiftSendResponse(giftSendRepository.findById(giftNo).orElseThrow(NoSuchElementException::new));
         } else if (option.equals("receive")) {
@@ -88,6 +84,7 @@ public class GiftService {
 
     @Transactional(readOnly = true)
     public List<GiftResponse> getAllGift(String option, Integer friendNo, UserDetailsImpl user) {
+        log.info("[선물 목록] 선물 목록 조회 요청. {}, {}", friendNo, option);
         if (option.equals("give")) {
             // 회원의 일정 목록에 있는 모든 보낸선물을 하나의 리스트로 담기
             return scheduleRepository.findByMember(user.getId()).stream()
