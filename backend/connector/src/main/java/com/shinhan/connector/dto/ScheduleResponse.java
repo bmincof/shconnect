@@ -4,11 +4,14 @@ import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class ScheduleResponse {
     private Integer scheduleNo;
     private Integer friendNo;
