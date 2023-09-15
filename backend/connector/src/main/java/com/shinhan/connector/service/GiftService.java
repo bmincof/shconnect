@@ -1,12 +1,11 @@
 package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.GiftAddRequest;
-import com.shinhan.connector.dto.GiftAddResponse;
-import com.shinhan.connector.dto.GiftSendResponse;
+import com.shinhan.connector.dto.request.GiftAddRequest;
+import com.shinhan.connector.dto.response.GiftAddResponse;
+import com.shinhan.connector.dto.response.GiftSendResponse;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.entity.GiftSend;
-import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.repository.GiftReceiveRepository;
 import com.shinhan.connector.repository.GiftSendRepository;
 import com.shinhan.connector.repository.ScheduleRepository;
@@ -26,6 +25,8 @@ public class GiftService {
     private final GiftSendRepository giftSendRepository;
     private final GiftReceiveRepository giftReceiveRepository;
     private final ScheduleRepository scheduleRepository;
+
+    //TODO: 받은 선물 로직 추가
 
     @Transactional
     public GiftAddResponse createGift(GiftAddRequest giftAddRequest, String options, UserDetailsImpl user) {
@@ -85,4 +86,6 @@ public class GiftService {
             throw new IllegalArgumentException();
         }
     }
+
+    //TODO: 선물 수정 메서드 추가
 }

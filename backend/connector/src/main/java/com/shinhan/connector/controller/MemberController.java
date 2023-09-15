@@ -2,6 +2,9 @@ package com.shinhan.connector.controller;
 
 import com.google.gson.Gson;
 import com.shinhan.connector.dto.*;
+import com.shinhan.connector.dto.request.*;
+import com.shinhan.connector.dto.response.SignInResponse;
+import com.shinhan.connector.dto.response.TokenAndMemberResponse;
 import com.shinhan.connector.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,5 +1,6 @@
-package com.shinhan.connector.dto;
+package com.shinhan.connector.dto.request;
 
+import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
@@ -33,6 +34,19 @@ public class ScheduleAddRequest {
                 .category(this.getCategory())
                 .date(this.getDate())
                 .repeatCycle(RepeatCycle.getRepeatCycle(this.getRepeatCycle()))
+                .favorite(false)
+                .alarm(Alarm.getAlarm(this.getAlarm()))
+                .build();
+    }
+
+    public MySchedule toMyScheduleEntity() {
+        return MySchedule.builder()
+                .name(this.getName())
+                .content(this.getContent())
+                .category(this.getCategory())
+                .date(this.getDate())
+                .repeatCycle(RepeatCycle.getRepeatCycle(this.getRepeatCycle()))
+                .favorite(false)
                 .alarm(Alarm.getAlarm(this.getAlarm()))
                 .build();
     }

@@ -1,8 +1,8 @@
 package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.TributeRegistRequest;
-import com.shinhan.connector.dto.TributeResponse;
+import com.shinhan.connector.dto.request.TributeRegistRequest;
+import com.shinhan.connector.dto.response.TributeResponse;
 import com.shinhan.connector.entity.*;
 import com.shinhan.connector.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -80,6 +80,27 @@ public class TributeService {
             tribute = receive;
         }
 
+        return TributeResponse.entityToDto(tribute);
+    }
+
+    public TributeResponse getDetail(String option, Integer tributeNo) {
+        log.info("[경조사비 상세조회] 경조사비 상세조회. {}, {}", option, tributeNo);
+
+        Object tribute = null;
+        if (option.contains("give")) {
+            tribute = tributeSendRepository.findById(tributeNo)
+                    .orElseThrow(() -> {
+                        log.error("[경조사비 상세조회] 경조사비 번호가 잘못되었습니다.");
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "경조사비 번호가 잘못되었습니다.");
+                    });
+        } else {
+            tribute = tributeReceiveRepository.findById(tributeNo)
+                    .orElseThrow(() -> {
+                        log.error("[경조사비 상세조회] 경조사비 번호가 잘못되었습니다.");
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "경조사비 번호가 잘못되었습니다.");
+                    });
+        }
+        log.info("[경조사비 상세조회] 상세조회 완료.");
         return TributeResponse.entityToDto(tribute);
     }
 }

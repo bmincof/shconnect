@@ -1,13 +1,11 @@
 package com.shinhan.connector.entity;
 
-import com.shinhan.connector.dto.FriendUpdateRequest;
+import com.shinhan.connector.dto.request.FriendUpdateRequest;
 import com.shinhan.connector.enums.Relation;
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 

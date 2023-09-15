@@ -1,6 +1,5 @@
 package com.shinhan.connector.repository;
 
-import com.shinhan.connector.dto.FriendResponse;
 import com.shinhan.connector.entity.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
