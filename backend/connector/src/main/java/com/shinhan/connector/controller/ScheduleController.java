@@ -30,13 +30,15 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{scheduleNo}")
-    public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable Integer scheduleNo, @RequestParam String option) {
+    public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable Integer scheduleNo,
+                                                          @RequestParam(required = false) String option) {
         return ResponseEntity.ok(scheduleService.deleteSchedule(scheduleNo, option));
     }
 
     // 일정 상세 조회
     @GetMapping("/{scheduleNo}")
-    public ResponseEntity<ScheduleResponse> getScheduleDetail(@PathVariable Integer scheduleNo, @RequestParam String option) {
+    public ResponseEntity<ScheduleResponse> getScheduleDetail(@PathVariable Integer scheduleNo,
+                                                              @RequestParam(required = false) String option) {
         return ResponseEntity.ok(scheduleService.selectSchedule(scheduleNo, option));
     }
 

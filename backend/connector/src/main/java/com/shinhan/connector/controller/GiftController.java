@@ -1,10 +1,10 @@
 package com.shinhan.connector.controller;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
+import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.GiftAddRequest;
 import com.shinhan.connector.dto.response.GiftAddResponse;
-import com.shinhan.connector.dto.response.GiftSendResponse;
-import com.shinhan.connector.dto.ResponseMessage;
+import com.shinhan.connector.dto.response.GiftResponse;
 import com.shinhan.connector.service.GiftService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,14 +35,14 @@ public class GiftController {
     }
 
     @GetMapping("/{giftNo}")
-    public ResponseEntity<GiftSendResponse> getGift(@PathVariable Integer giftNo, @RequestParam String option) {
+    public ResponseEntity<? extends GiftResponse> getGift(@PathVariable Integer giftNo, @RequestParam String option) {
         return ResponseEntity.ok(giftService.getGift(giftNo, option));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<GiftSendResponse>> getAllGift(@RequestParam String option,
-                                                             @RequestParam(required = false) Integer friendNo,
-                                                             @AuthenticationPrincipal UserDetailsImpl user) {
+    public ResponseEntity<List<? extends GiftResponse>> getAllGift(@RequestParam String option,
+                                                                   @RequestParam(required = false) Integer friendNo,
+                                                                   @AuthenticationPrincipal UserDetailsImpl user) {
         return ResponseEntity.ok(giftService.getAllGift(option, friendNo, user));
     }
 
