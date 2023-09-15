@@ -2,10 +2,7 @@ package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.request.GiftAddRequest;
-import com.shinhan.connector.dto.response.GiftAddResponse;
-import com.shinhan.connector.dto.response.GiftReceiveResponse;
-import com.shinhan.connector.dto.response.GiftResponse;
-import com.shinhan.connector.dto.response.GiftSendResponse;
+import com.shinhan.connector.dto.response.*;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.entity.GiftReceive;
 import com.shinhan.connector.entity.GiftSend;
@@ -31,8 +28,6 @@ public class GiftService {
     private final ScheduleRepository scheduleRepository;
     private final MyScheduleRepository myScheduleRepository;
 
-    //TODO: 받은 선물 로직 추가
-
     @Transactional
     public GiftAddResponse createGift(GiftAddRequest giftAddRequest, String options, UserDetailsImpl user) {
         log.info("[선물 등록] 선물등록 요청. {}, {}", giftAddRequest.toString(), user.getUserId());
@@ -45,7 +40,7 @@ public class GiftService {
             giftSendRepository.save(gift);
             giftSendRepository.flush();
 
-            return GiftAddResponse.fromGiftSendEntity(gift);
+            return new GiftSendAddResponse(gift);
         // 받은 선물이면
         } else if (options.equals("receive")){
 
@@ -55,8 +50,7 @@ public class GiftService {
             giftReceiveRepository.save(gift);
             giftReceiveRepository.flush();
 
-//            return GiftAddResponse.fromGiftSendEntity(gift);
-            return null;
+            return new GiftReceiveAddResponse(gift);
         } else {
             throw new IllegalArgumentException();
         }
