@@ -19,18 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/member")
 public class MemberController {
     private final MemberService memberService;
-    private Gson gson = new Gson();
 
     // 로그인
     @PostMapping("/sign-in")
-    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
+    public ResponseEntity<TokenAndMemberResponse> signIn(@RequestBody SignInRequest signInRequest) {
         // 로그인 체크 메서드 + header에 JWT 담기
         TokenAndMemberResponse tokenAndMemberResponse = memberService.signIn(signInRequest);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("tokens", gson.toJson(tokenAndMemberResponse.getToken()))
-                .header("Access-Control-Expose-Headers", "tokens")
-                .body(tokenAndMemberResponse.getSignInResponse());
+        return ResponseEntity.status(HttpStatus.OK).body(tokenAndMemberResponse);
     }
 
     // 1원 송금
