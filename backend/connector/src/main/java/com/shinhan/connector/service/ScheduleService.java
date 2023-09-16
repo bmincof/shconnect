@@ -66,16 +66,18 @@ public class ScheduleService {
 
     @Transactional
     public ResponseMessage deleteSchedule(Integer scheduleNo, String option, UserDetailsImpl user) {
-        if (option.equals("mine")) {
+        if (option == null) {
             myScheduleRepository.findById(scheduleNo)
                     .orElseThrow(NoSuchElementException::new)
                     .isAllowed(user.getId());
             myScheduleRepository.deleteById(scheduleNo);
-        } else {
+        } else if (option.equals("mine")) {
             scheduleRepository.findById(scheduleNo)
                     .orElseThrow(NoSuchElementException::new)
                     .isAllowed(user.getId());
             scheduleRepository.deleteById(scheduleNo);
+        } else {
+            throw new NoSuchElementException();
         }
 
         return new ResponseMessage("삭제가 완료되었습니다.");

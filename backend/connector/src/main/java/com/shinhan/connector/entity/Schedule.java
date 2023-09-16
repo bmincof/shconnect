@@ -58,9 +58,9 @@ public class Schedule {
     @JoinColumn(name = "friend_no")
     Friend friend;
 
-    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     List<GiftSend> giftSends;
-    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     List<TributeSend> tributeSends;
 
     // 비즈니스 로직

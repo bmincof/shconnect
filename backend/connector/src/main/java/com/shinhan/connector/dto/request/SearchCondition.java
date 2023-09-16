@@ -9,4 +9,7 @@ public class SearchCondition {
     private Boolean amount;
     private Long start;
     private Long end;
+    private Boolean age;
+    private Boolean gender;
+    private String category;
 }

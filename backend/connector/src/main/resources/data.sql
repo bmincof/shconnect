@@ -11,7 +11,7 @@ VALUES (100000, 100002, '익명의사람', '088', '118561223129', 50000, 3655000
 (100001, 100002, '박친구', '088', '852285228852', -1000000, 35550000, 1646643307, '빌린 돈 갚음');
 
 INSERT INTO MEMBER (member_no, id, password, name, age, gender, contact, account_no)
-VALUES (100000, 'test', '$2a$10$utsNAnkpTnxLLhxcjlnfEeUqB/4lK4rPAoqR5Xrljlb.BK74O4t42', '김신한', 20, 'F', '010-1234-1234', 100002);
+VALUES (100000, 'test', '$2a$10$utsNAnkpTnxLLhxcjlnfEeUqB/4lK4rPAoqR5Xrljlb.BK74O4t42', '김신한', 21, 'F', '010-1234-1234', 100002);
 
 INSERT INTO FRIEND (FRIEND_NO, ACCOUNT_NUMBER, BANK_CODE, BELONG, CONTACT, IMAGE, NAME, RELATION, MEMBER_NO)
 VALUES (100000, '456789123456', '088', '신기한모임', '987654321', '이미지.jpg', '김친구', 'FRIEND', 100000),
@@ -42,6 +42,21 @@ VALUES
 (100003, 50000, '받은 경조사비', 100000, 100000),
 (100004, 50000, '받은 경조사비', 100000, 100000),
 (100005, 50000, '받은 경조사비', 100000, 100000);
+
+INSERT INTO GIFT_LOG (gift_log_no, age_range, gender, category, gift_category, avg_price, count)
+VALUES
+(100001, 20, '여성', '생일', '화장품', 12000, 20),
+(100002, 20, '남성', '생일', '화장품', 30000, 5),
+(100003, 20, '여성', '생일', '식사', 50000, 30),
+(100004, 20, '여성', '기념일', '식사', 50000, 30),
+(100005, 40, '남성', '기념일', '식사', 100000, 8);
+
+INSERT INTO TRIBUTE_LOG (tribute_log_no, age_range, gender, category, avg_price, count)
+VALUES
+(100001, 20, '여성', '생일', 12000, 20),
+(100002, 20, '남성', '생일', 30000, 5),
+(100003, 20, '여성', '기념일', 50000, 30),
+(100004, 40, '남성', '기념일', 100000, 8);
 
 INSERT INTO SAVINGS_LETTER (member_no, friend_no, bank_code, bank_account, savings_letter_no, name, content, current_round, total_round, amount, payment_date, start_date, end_date)
 VALUES

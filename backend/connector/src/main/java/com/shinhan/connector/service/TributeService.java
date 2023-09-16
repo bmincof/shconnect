@@ -35,6 +35,9 @@ public class TributeService {
     private final TributeReceiveQueryDslRepository tributeReceiveQueryDslRepository;
     private final TributeSendQueryDslRepository tributeSendQueryDslRepository;
 
+    private final MemberRepository memberRepository;
+    private final TributeLogRepository tributeLogRepository;
+
     public TributeResponse regist(TributeRegistRequest tributeRegistRequest, UserDetailsImpl user) {
         Object tribute;
         log.info("[경조사비 등록] 경조사비 등록 요청. {}", tributeRegistRequest, user);
@@ -59,6 +62,22 @@ public class TributeService {
 
             tributeSendRepository.save(send);
             tributeSendRepository.flush();
+
+            Member member = memberRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new);
+            TributeLog tributeLog = tributeLogRepository.findByCondition(member.getAge() / 10 * 10, member.getGender().getValue(), schedule.getCategory());
+
+            if (tributeLog == null) {
+                tributeLog = tributeLogRepository.saveAndFlush(TributeLog.builder()
+                        .category(schedule.getCategory())
+                        .ageRange(member.getAge() / 10 * 10)
+                        .gender(member.getGender().getValue())
+                        .count(0)
+                        .avgPrice(0L)
+                        .build());
+            }
+
+            // 로그 업데이트
+            tributeLogRepository.saveAndFlush(tributeLog.update(send));
 
             tribute = send;
         } else {
