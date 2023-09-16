@@ -23,7 +23,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GiftService {
     private final GiftSendRepository giftSendRepository;
+    private final GiftSendQueryDslRepository giftSendQueryDslRepository;
     private final GiftReceiveRepository giftReceiveRepository;
+    private final GiftReceiveQueryDslRepository giftReceiveQueryDslRepository;
     private final ScheduleRepository scheduleRepository;
     private final ScheduleQueryDslRepository scheduleQueryDslRepository;
     private final MyScheduleRepository myScheduleRepository;
@@ -119,6 +121,22 @@ public class GiftService {
             throw new IllegalArgumentException();
         }
     }
+
+    @Transactional(readOnly = true)
+    public GiftPriceResponse getTotalPrice(SearchCondition searchCondition, UserDetailsImpl user) {
+        log.info("[선물 목록] 총 선물 가격 조회 요청. {}, {}", searchCondition.toString(), user.getId());
+
+        if (searchCondition.getOption().equals("give")) {
+            // 회원의 일정 목록에 있는 모든 보낸선물을 하나의 리스트로 담기
+            return new GiftPriceResponse(giftSendQueryDslRepository.getAmountByCondition(searchCondition, user.getId()));
+        } else if (searchCondition.getOption().equals("receive")) {
+            // 회원의 내 일정 목록에 있는 모든 받은 선물을 하나의 리스트로 담기
+            return new GiftPriceResponse(giftReceiveQueryDslRepository.getAmountByCondition(searchCondition, user.getId()));
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     @Transactional
     public GiftResponse updateGift(Integer giftNo, String option, GiftUpdateRequest request, UserDetailsImpl user) {
         log.info("[선물 목록] 선물 목록 조회 요청. {}, {}, {}, {}", giftNo, option, request.toString(), user.getId());

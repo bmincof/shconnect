@@ -50,7 +50,6 @@ public class ScheduleController {
     @GetMapping("/list")
     public ResponseEntity<List<ScheduleListResponse>> getSchedules(SearchCondition searchCondition,
                                                                    @AuthenticationPrincipal UserDetailsImpl user) {
-        System.out.println(searchCondition);
         return ResponseEntity.ok(scheduleService.selectAllSchedule(searchCondition, user));
     }
 
