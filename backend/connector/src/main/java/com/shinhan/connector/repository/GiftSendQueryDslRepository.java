@@ -28,20 +28,20 @@ public class GiftSendQueryDslRepository {
         if (endDate == null)
             return null;
 
-        return schedule.date.loe(endDate);
+        return giftSend.schedule.date.loe(endDate);
     }
 
     private BooleanExpression startDate(Long startDate) {
         if (startDate == null)
             return null;
 
-        return schedule.date.goe(startDate);
+        return giftSend.schedule.date.goe(startDate);
     }
 
     private BooleanExpression sameUser(Integer userNo) {
         if (userNo == null)
             return null;
 
-        return schedule.member.no.eq(userNo);
+        return giftSend.schedule.member.no.eq(userNo);
     }
 }

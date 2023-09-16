@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import static com.shinhan.connector.entity.QGiftReceive.giftReceive;
-import static com.shinhan.connector.entity.QSchedule.schedule;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,9 +15,7 @@ public class GiftReceiveQueryDslRepository {
 
     public Long getAmountByCondition(SearchCondition searchCondition, Integer userNo) {
         return jpaQueryFactory.select(
-                giftReceive.priceMax.sum()
-                        .add(giftReceive.priceMin.sum())
-                        .divide(2))
+                giftReceive.priceMax.sum().add(giftReceive.priceMin.sum()))
                 .from(giftReceive)
                 .where(
                         sameUser(userNo),
@@ -31,20 +28,20 @@ public class GiftReceiveQueryDslRepository {
         if (endDate == null)
             return null;
 
-        return schedule.date.loe(endDate);
+        return giftReceive.mySchedule.date.loe(endDate);
     }
 
     private BooleanExpression startDate(Long startDate) {
         if (startDate == null)
             return null;
 
-        return schedule.date.goe(startDate);
+        return giftReceive.mySchedule.date.goe(startDate);
     }
 
     private BooleanExpression sameUser(Integer userNo) {
         if (userNo == null)
             return null;
 
-        return schedule.member.no.eq(userNo);
+        return giftReceive.mySchedule.member.no.eq(userNo);
     }
 }

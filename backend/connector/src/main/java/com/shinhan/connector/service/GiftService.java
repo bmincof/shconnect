@@ -131,7 +131,7 @@ public class GiftService {
             return new GiftPriceResponse(giftSendQueryDslRepository.getAmountByCondition(searchCondition, user.getId()));
         } else if (searchCondition.getOption().equals("receive")) {
             // 회원의 내 일정 목록에 있는 모든 받은 선물을 하나의 리스트로 담기
-            return new GiftPriceResponse(giftReceiveQueryDslRepository.getAmountByCondition(searchCondition, user.getId()));
+            return new GiftPriceResponse(giftReceiveQueryDslRepository.getAmountByCondition(searchCondition, user.getId()) / 2);
         } else {
             throw new IllegalArgumentException();
         }
