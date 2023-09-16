@@ -1,10 +1,12 @@
 package com.shinhan.connector.entity;
 
-import com.sun.istack.NotNull;
+import com.shinhan.connector.dto.request.GiftUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 
@@ -30,4 +32,19 @@ public class GiftSend {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_no")
     Schedule schedule;
+
+    // 비즈니스 로직
+    public GiftSend isAllowed(int userId) {
+        if (userId != schedule.getMember().getNo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "자신의 선물만 조회할 수 있습니다.");
+        }
+        return this;
+    }
+
+    public void update(GiftUpdateRequest updateRequest) {
+        this.name = updateRequest.getName();
+        this.category = updateRequest.getCategory();
+        this.price = updateRequest.getPrice();
+        this.note = updateRequest.getNote();
+    }
 }
