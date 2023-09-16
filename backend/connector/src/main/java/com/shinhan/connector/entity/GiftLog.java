@@ -1,12 +1,14 @@
 package com.shinhan.connector.entity;
 
-import com.shinhan.connector.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 @Data
@@ -24,10 +26,9 @@ public class GiftLog {
     @Column(name = "gift_category", length = 20, nullable = false)
     private String giftCategory;
     @Column(name = "avg_price")
-    private Double avgPrice;
+    private Long avgPrice;
     @Column
     private Integer count;
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @Column
+    private String gender;
 }
