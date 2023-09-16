@@ -4,9 +4,9 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     defer-datasource-initialization: true
 
     open-in-view: false # SSE 연결되는 동안 JPA에서 DB와 지속적으로 연결되지 않도록 설정
@@ -15,11 +15,16 @@ spring:
     console:
       enabled: true
 
+#  datasource:
+#    url: jdbc:mysql://52.79.227.171:3306/mysql
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: root
   datasource:
-    url: jdbc:mysql://52.79.227.171:3306/mysql
-    driverClassName: com.mysql.cj.jdbc.Driver
-    username: root
-    password: root
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
 
   # 파일 업로드 설정
   servlet:
