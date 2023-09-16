@@ -35,4 +35,9 @@ public class TributeSend {
         this.amount = tributeModifyRequest.getAmount() == null ? amount : tributeModifyRequest.getAmount();
         this.note = tributeModifyRequest.getNote() == null ? note : tributeModifyRequest.getNote();
     }
+
+    public void send(Long amount) {
+        this.sent = true;
+        this.amount = amount;
+    }
 }

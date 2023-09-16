@@ -23,6 +23,10 @@ public class SavingsLetter {
     @Column(columnDefinition = "text")
     private String content;
     @Column(nullable = false)
+    private String bankCode;
+    @Column(nullable = false)
+    private String bankAccount;
+    @Column(nullable = false)
     private Integer currentRound;
     @Column(nullable = false)
     private Integer totalRound;

@@ -8,9 +8,11 @@ import com.shinhan.connector.dto.request.SendMoneyRequest;
 import com.shinhan.connector.entity.Account;
 import com.shinhan.connector.entity.AccountHistory;
 import com.shinhan.connector.entity.Member;
+import com.shinhan.connector.entity.TributeSend;
 import com.shinhan.connector.repository.AccountHistoryRepository;
 import com.shinhan.connector.repository.AccountRepository;
 import com.shinhan.connector.repository.MemberRepository;
+import com.shinhan.connector.repository.TributeSendRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +30,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountHistoryRepository accountHistoryRepository;
     private final MemberRepository memberRepository;
+    private final TributeSendRepository tributeSendRepository;
     @Transactional
     public List<AccountHistoryResponse> getHistory(String accountNumber, String option, UserDetailsImpl user) {
         log.info("[계좌내역 조회] 계좌내역조회 요청. {}, {}, {}", accountNumber, option, user);
@@ -156,6 +156,18 @@ public class AccountService {
 
         accountRepository.save(giveAccount);
         accountRepository.save(receiveAccount);
+
+        if (sendMoneyRequest.getTributeNo() != null) {
+            TributeSend tributeSend = tributeSendRepository.findById(sendMoneyRequest.getTributeNo())
+                    .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 경조사비 번호입니다.")
+                    );
+            if (tributeSend.getSent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 송금이 완료된 내역입니다.");
+            }
+            tributeSend.send(sendMoneyRequest.getAmount());
+            tributeSendRepository.save(tributeSend);
+        }
 
         accountHistoryRepository.save(giveHistory);
         accountHistoryRepository.save(receiveHistory);
