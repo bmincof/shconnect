@@ -42,3 +42,6 @@ VALUES
 (100003, 50000, '받은 경조사비', 100000, 100000),
 (100004, 50000, '받은 경조사비', 100000, 100000),
 (100005, 50000, '받은 경조사비', 100000, 100000);
+
+--INSERT INTO SAVINGS_LETTER (savings_letter_no, name, content, currentRound, totalRound, amount, paymentDate, startDate, endDate)
+--VALUES
