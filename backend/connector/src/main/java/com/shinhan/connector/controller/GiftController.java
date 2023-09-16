@@ -3,6 +3,7 @@ package com.shinhan.connector.controller;
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.GiftAddRequest;
+import com.shinhan.connector.dto.request.SearchCondition;
 import com.shinhan.connector.dto.response.GiftAddResponse;
 import com.shinhan.connector.dto.response.GiftResponse;
 import com.shinhan.connector.service.GiftService;
@@ -44,10 +45,9 @@ public class GiftController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<? extends GiftResponse>> getAllGift(@RequestParam String option,
-                                                                   @RequestParam(required = false) Integer friendNo,
+    public ResponseEntity<List<? extends GiftResponse>> getAllGift(SearchCondition searchCondition,
                                                                    @AuthenticationPrincipal UserDetailsImpl user) {
-        return ResponseEntity.ok(giftService.getAllGift(option, friendNo, user));
+        return ResponseEntity.ok(giftService.getAllGift(searchCondition, user));
     }
 
     @PutMapping("/{giftNo}")

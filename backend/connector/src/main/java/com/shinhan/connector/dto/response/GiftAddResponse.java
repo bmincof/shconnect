@@ -1,6 +1,9 @@
 package com.shinhan.connector.dto.response;
 
-public abstract class GiftAddResponse {
+import lombok.Data;
+
+@Data
+public class GiftAddResponse {
     private Integer giftNo;
     private Integer scheduleNo;
     private String name;

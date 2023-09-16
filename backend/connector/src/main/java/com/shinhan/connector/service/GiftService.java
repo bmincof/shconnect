@@ -1,15 +1,13 @@
 package com.shinhan.connector.service;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.request.GiftAddRequest;
-import com.shinhan.connector.dto.response.*;
 import com.shinhan.connector.dto.ResponseMessage;
+import com.shinhan.connector.dto.request.GiftAddRequest;
+import com.shinhan.connector.dto.request.SearchCondition;
+import com.shinhan.connector.dto.response.*;
 import com.shinhan.connector.entity.GiftReceive;
 import com.shinhan.connector.entity.GiftSend;
-import com.shinhan.connector.repository.GiftReceiveRepository;
-import com.shinhan.connector.repository.GiftSendRepository;
-import com.shinhan.connector.repository.MyScheduleRepository;
-import com.shinhan.connector.repository.ScheduleRepository;
+import com.shinhan.connector.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,10 @@ public class GiftService {
     private final GiftSendRepository giftSendRepository;
     private final GiftReceiveRepository giftReceiveRepository;
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleQueryDslRepository scheduleQueryDslRepository;
     private final MyScheduleRepository myScheduleRepository;
+    private final MyScheduleQueryDslRepository myScheduleQueryDslRepository;
+    private final FriendRepository friendRepository;
 
     @Transactional
     public GiftAddResponse createGift(GiftAddRequest giftAddRequest, String options, UserDetailsImpl user) {
@@ -40,12 +41,15 @@ public class GiftService {
             giftSendRepository.save(gift);
             giftSendRepository.flush();
 
+            System.out.println("new GiftSendAddResponse(gift) = " + new GiftSendAddResponse(gift));
+            
             return new GiftSendAddResponse(gift);
         // 받은 선물이면
         } else if (options.equals("receive")){
 
             GiftReceive gift = giftAddRequest.toGiftReceiveEntity();
             gift.setMySchedule(myScheduleRepository.findById(giftAddRequest.getScheduleNo()).orElseThrow(NoSuchElementException::new));
+            gift.setFriend(friendRepository.findById(giftAddRequest.getFriendNo()).orElseThrow(NoSuchElementException::new));
 
             giftReceiveRepository.save(gift);
             giftReceiveRepository.flush();
@@ -97,18 +101,18 @@ public class GiftService {
     }
 
     @Transactional(readOnly = true)
-    public List<GiftResponse> getAllGift(String option, Integer friendNo, UserDetailsImpl user) {
-        log.info("[선물 목록] 선물 목록 조회 요청. {}, {}", friendNo, option);
+    public List<GiftResponse> getAllGift(SearchCondition searchCondition, UserDetailsImpl user) {
+        log.info("[선물 목록] 선물 목록 조회 요청. {}, {}", searchCondition.toString());
 
-        if (option.equals("give")) {
+        if (searchCondition.getOption().equals("give")) {
             // 회원의 일정 목록에 있는 모든 보낸선물을 하나의 리스트로 담기
-            return scheduleRepository.findByMember(user.getId()).stream()
+            return scheduleQueryDslRepository.getListByCondition(searchCondition, user.getId()).stream()
                     .flatMap(schedule -> schedule.getGiftSends().stream())
                     .map(GiftSendResponse::new)
                     .collect(Collectors.toList());
-        } else if (option.equals("receive")) {
+        } else if (searchCondition.getOption().equals("receive")) {
             // 회원의 내 일정 목록에 있는 모든 받은 선물을 하나의 리스트로 담기
-            return myScheduleRepository.findByMember(user.getId()).stream()
+            return myScheduleQueryDslRepository.getListByCondition(searchCondition, user.getId()).stream()
                     .flatMap(mySchedule -> mySchedule.getGiftReceives().stream())
                     .map(GiftReceiveResponse::new)
                     .collect(Collectors.toList());
