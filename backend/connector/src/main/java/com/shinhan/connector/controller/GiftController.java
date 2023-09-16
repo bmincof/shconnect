@@ -46,9 +46,13 @@ public class GiftController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<? extends GiftResponse>> getAllGift(SearchCondition searchCondition,
+    public ResponseEntity<?> getAllGift(SearchCondition searchCondition,
                                                                    @AuthenticationPrincipal UserDetailsImpl user) {
-        return ResponseEntity.ok(giftService.getAllGift(searchCondition, user));
+        if (searchCondition.getAmount()) {
+            return ResponseEntity.ok(giftService.getTotalPrice(searchCondition, user));
+        } else {
+            return ResponseEntity.ok(giftService.getAllGift(searchCondition, user));
+        }
     }
 
     @PutMapping("/{giftNo}")
