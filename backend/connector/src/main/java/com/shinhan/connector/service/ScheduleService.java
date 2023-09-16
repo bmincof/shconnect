@@ -34,32 +34,29 @@ public class ScheduleService {
 
     // 새로운 일정을 추가하는 메서드
     @Transactional
-    public ScheduleAddResponse addSchedule(ScheduleAddRequest request, UserDetailsImpl user) {
-        log.info("[일정 등록] 일정등록 요청. {}, {}", request.toString(), user.getUserId());
+    public List<ScheduleAddResponse> addSchedule(ScheduleAddRequest addRequest, UserDetailsImpl user) {
+        log.info("[일정 등록] 일정등록 요청. {}, {}", addRequest.toString(), user.getUserId());
 
-        if (request.getFriendNo() == null) {
-            // 저장할 엔티티 생성
-            MySchedule mySchedule = request.toMyScheduleEntity();
-            mySchedule.setMember(memberRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new));
+        // 요청에 회원 정보 추가
+        addRequest.setMember(memberRepository.findById(user.getId())
+                .orElseThrow(NoSuchElementException::new));
 
-            // 생성한 엔티티 저장
-            myScheduleRepository.save(mySchedule);
-            myScheduleRepository.flush();
+        if (addRequest.getFriendNo() == null) {
+            MySchedule mySchedule = addRequest.toMyScheduleEntity();
 
-            // API 응답 생성
-            return ScheduleAddResponse.fromMyScheduleEntity(mySchedule);
+            // 반복 주기에 맞춰 엔티티 생성 후 저장
+            return myScheduleRepository.saveAll(MySchedule.generateMySchedules(mySchedule)).stream()
+                    .map(ScheduleAddResponse::fromMyScheduleEntity)
+                    .collect(Collectors.toList());
         } else {
-            // 저장할 엔티티 생성
-            Schedule schedule = request.toScheduleEntity();
-            schedule.setFriend(friendRepository.findById(request.getFriendNo()).orElseThrow(NoSuchElementException::new));
-            schedule.setMember(memberRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new));
+            // 요청에 친구 정보 추가
+            addRequest.setFriend(friendRepository.findById(addRequest.getFriendNo())
+                    .orElseThrow(NoSuchElementException::new));
+            Schedule schedule = addRequest.toScheduleEntity();
 
-            // 생성한 엔티티 저장
-            scheduleRepository.save(schedule);
-            scheduleRepository.flush();
-
-            // API 응답 생성
-            return ScheduleAddResponse.fromScheduleEntity(schedule);
+            return scheduleRepository.saveAll(Schedule.generateSchedules(schedule)).stream()
+                    .map(ScheduleAddResponse::fromScheduleEntity)
+                    .collect(Collectors.toList());
         }
     }
 
