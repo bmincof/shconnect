@@ -22,10 +22,23 @@ INSERT INTO SCHEDULE (schedule_no, friend_no, name, category, date, repeat_cycle
 VALUES (100000, 100000, '새로운일정', '결혼식', 1646643307, 'NONE', null, 'NONE', 'false', 100000);
 
 INSERT INTO MY_SCHEDULE (my_schedule_no, name, category, date, repeat_cycle, content, alarm, favorite, member_no)
-VALUES (100000, '새로운 내 일정', '집들이', 1646643307, 'WEEK', '집들이 화이팅', 'MONTH', 'TRUE', 100000);
+VALUES
+(100000, '새로운 내 일정', '집들이', 156000000, 'WEEK', '집들이 화이팅', 'MONTH', 'TRUE', 100000),
+(100001, '새로운 두번째 일정', '집들이', 167000000, 'WEEK', '집들이 화이팅', 'MONTH', 'TRUE', 100000);
 
 INSERT INTO TRIBUTE_SEND (tribute_send_no, amount, note, sent, schedule_no)
-VALUES (100000, 50000, '보낼 경조사비', 'false', 100000);
+VALUES
+(100000, 50000, '보낼 경조사비', 'false', 100000),
+(100001, 60000, '보낼 경조사비1', 'true', 100000),
+(100002, 70000, '보낼 경조사비2', 'true', 100000),
+(100003, 80000, '보낼 경조사비3', 'false', 100000),
+(100004, 90000, '보낼 경조사비4', 'false', 100000);
 
 INSERT INTO TRIBUTE_RECEIVE (tribute_receive_no, amount, note, friend_no, my_schedule_no)
-VALUES (100000, 50000, '받은 경조사비', 100000, 100000);
+VALUES
+(100000, 50000, '받은 경조사비', 100000, 100000),
+(100001, 50000, '받은 경조사비', 100000, 100000),
+(100002, 50000, '받은 경조사비', 100000, 100000),
+(100003, 50000, '받은 경조사비', 100000, 100000),
+(100004, 50000, '받은 경조사비', 100000, 100000),
+(100005, 50000, '받은 경조사비', 100000, 100000);
