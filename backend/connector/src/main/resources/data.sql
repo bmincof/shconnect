@@ -43,5 +43,7 @@ VALUES
 (100004, 50000, '받은 경조사비', 100000, 100000),
 (100005, 50000, '받은 경조사비', 100000, 100000);
 
---INSERT INTO SAVINGS_LETTER (savings_letter_no, name, content, currentRound, totalRound, amount, paymentDate, startDate, endDate)
---VALUES
+INSERT INTO SAVINGS_LETTER (member_no, friend_no, bank_code, bank_account, savings_letter_no, name, content, current_round, total_round, amount, payment_date, start_date, end_date)
+VALUES
+(100000, 100000, '088', '184988102999', 100000, '적금편지1', 'test\ntest1\ntest2\ntest3\ntest4\ntest5\ntest6', 3, 12, 30000, 12312421, 21313213, 23121312),
+(100000, 100001, '088', '110282102999', 100001, '적금편지2', 'test\ntest1\ntest2\ntest3\ntest4', 12, 12, 30000, 12312421, 21313213, 23121312);

@@ -1,7 +1,7 @@
 package com.shinhan.connector.enums;
 
 public enum Relation {
-    FRIEND("친구"), FAMILY("가족"), COWORKER("직장동료"), BUSINESS("거래처"), ETC("기타");
+    FAMILY("가족"), FRIEND("친구"), COWORKER("직장동료"), BUSINESS("거래처"), ETC("기타");
 
     String value;
     Relation(String value) {
