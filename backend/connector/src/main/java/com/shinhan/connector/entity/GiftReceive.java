@@ -1,5 +1,6 @@
 package com.shinhan.connector.entity;
 
+import com.shinhan.connector.dto.request.GiftUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,5 +44,13 @@ public class GiftReceive {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "자신의 선물만 조회할 수 있습니다.");
         }
         return this;
+    }
+
+    public void update(GiftUpdateRequest updateRequest) {
+        this.name = updateRequest.getName();
+        this.category = updateRequest.getCategory();
+        this.priceMin = updateRequest.getPriceMin();
+        this.priceMax = updateRequest.getPriceMax();
+        this.note = updateRequest.getNote();
     }
 }

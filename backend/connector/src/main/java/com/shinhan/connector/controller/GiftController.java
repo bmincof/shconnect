@@ -3,6 +3,7 @@ package com.shinhan.connector.controller;
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.GiftAddRequest;
+import com.shinhan.connector.dto.request.GiftUpdateRequest;
 import com.shinhan.connector.dto.request.SearchCondition;
 import com.shinhan.connector.dto.response.GiftAddResponse;
 import com.shinhan.connector.dto.response.GiftResponse;
@@ -51,7 +52,10 @@ public class GiftController {
     }
 
     @PutMapping("/{giftNo}")
-    public ResponseEntity<? extends GiftResponse> modifyGift(@PathVariable Integer giftNo, @RequestParam String option) {
-        return null;
+    public ResponseEntity<? extends GiftResponse> modifyGift(@PathVariable Integer giftNo,
+                                                             @RequestParam String option,
+                                                             @RequestBody GiftUpdateRequest updateRequest,
+                                                             @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(giftService.updateGift(giftNo, option, updateRequest, user));
     }
 }

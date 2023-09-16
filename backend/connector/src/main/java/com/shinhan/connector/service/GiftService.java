@@ -3,6 +3,7 @@ package com.shinhan.connector.service;
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.GiftAddRequest;
+import com.shinhan.connector.dto.request.GiftUpdateRequest;
 import com.shinhan.connector.dto.request.SearchCondition;
 import com.shinhan.connector.dto.response.*;
 import com.shinhan.connector.entity.GiftReceive;
@@ -40,8 +41,6 @@ public class GiftService {
 
             giftSendRepository.save(gift);
             giftSendRepository.flush();
-
-            System.out.println("new GiftSendAddResponse(gift) = " + new GiftSendAddResponse(gift));
             
             return new GiftSendAddResponse(gift);
         // 받은 선물이면
@@ -102,7 +101,7 @@ public class GiftService {
 
     @Transactional(readOnly = true)
     public List<GiftResponse> getAllGift(SearchCondition searchCondition, UserDetailsImpl user) {
-        log.info("[선물 목록] 선물 목록 조회 요청. {}, {}", searchCondition.toString());
+        log.info("[선물 목록] 선물 목록 조회 요청. {}, {}", searchCondition.toString(), user.getId());
 
         if (searchCondition.getOption().equals("give")) {
             // 회원의 일정 목록에 있는 모든 보낸선물을 하나의 리스트로 담기
@@ -120,6 +119,38 @@ public class GiftService {
             throw new IllegalArgumentException();
         }
     }
+    @Transactional
+    public GiftResponse updateGift(Integer giftNo, String option, GiftUpdateRequest request, UserDetailsImpl user) {
+        log.info("[선물 목록] 선물 목록 조회 요청. {}, {}, {}, {}", giftNo, option, request.toString(), user.getId());
 
-    //TODO: 선물 수정 메서드 추가
+        if (option.equals("give")) {
+            // 엔티티 조회 후 수정
+            GiftSend giftSend = giftSendRepository.findById(giftNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId());
+            giftSend.update(request);
+
+            // 수정사항 업데이트
+            giftSendRepository.save(giftSend);
+            giftSendRepository.flush();
+
+            // API 응답 생성
+            return new GiftSendResponse(giftSend);
+        } else if (option.equals("receive")) {
+            // 엔티티 조회 후 수정
+            GiftReceive giftReceive = giftReceiveRepository.findById(giftNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId());
+            giftReceive.update(request);
+
+            // 수정사항 업데이트
+            giftReceiveRepository.save(giftReceive);
+            giftSendRepository.flush();
+
+            // API 응답 생성
+            return new GiftReceiveResponse(giftReceive);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 }
