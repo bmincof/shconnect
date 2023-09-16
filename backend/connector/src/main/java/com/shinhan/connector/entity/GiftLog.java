@@ -31,4 +31,14 @@ public class GiftLog {
     private Integer count;
     @Column
     private String gender;
+
+    // 로그 수정
+    public GiftLog update(GiftSend giftSend) {
+        int newCount = this.count + 1;
+
+        this.avgPrice = (this.avgPrice * this.count + giftSend.getPrice()) / newCount;
+        this.count = newCount;
+
+        return this;
+    }
 }

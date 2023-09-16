@@ -6,8 +6,7 @@ import com.shinhan.connector.dto.request.GiftAddRequest;
 import com.shinhan.connector.dto.request.GiftUpdateRequest;
 import com.shinhan.connector.dto.request.SearchCondition;
 import com.shinhan.connector.dto.response.*;
-import com.shinhan.connector.entity.GiftReceive;
-import com.shinhan.connector.entity.GiftSend;
+import com.shinhan.connector.entity.*;
 import com.shinhan.connector.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +25,15 @@ public class GiftService {
     private final GiftSendQueryDslRepository giftSendQueryDslRepository;
     private final GiftReceiveRepository giftReceiveRepository;
     private final GiftReceiveQueryDslRepository giftReceiveQueryDslRepository;
+
     private final ScheduleRepository scheduleRepository;
     private final ScheduleQueryDslRepository scheduleQueryDslRepository;
     private final MyScheduleRepository myScheduleRepository;
     private final MyScheduleQueryDslRepository myScheduleQueryDslRepository;
+
     private final FriendRepository friendRepository;
+    private final MemberRepository memberRepository;
+    private final GiftLogRepository giftLogRepository;
 
     @Transactional
     public GiftAddResponse createGift(GiftAddRequest giftAddRequest, String options, UserDetailsImpl user) {
@@ -39,15 +42,32 @@ public class GiftService {
         // 보낸 선물이면
         if (options.equals("give")) {
             GiftSend gift = giftAddRequest.toGiftSendEntity();
-            gift.setSchedule(scheduleRepository.findById(giftAddRequest.getScheduleNo()).orElseThrow(NoSuchElementException::new));
+            Schedule schedule = scheduleRepository.findById(giftAddRequest.getScheduleNo()).orElseThrow(NoSuchElementException::new);
+            gift.setSchedule(schedule);
 
             giftSendRepository.save(gift);
             giftSendRepository.flush();
-            
+
+            Member member = memberRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new);
+            GiftLog giftLog = giftLogRepository.findByCondition(member.getAge() / 10 * 10, member.getGender().getValue(), schedule.getCategory());
+
+            if (giftLog == null) {
+                giftLog = giftLogRepository.saveAndFlush(GiftLog.builder()
+                        .category(schedule.getCategory())
+                        .giftCategory(gift.getCategory())
+                        .ageRange(member.getAge() / 10 * 10)
+                        .gender(member.getGender().getValue())
+                        .count(0)
+                        .avgPrice(0L)
+                        .build());
+            }
+
+            // 로그 업데이트
+            giftLogRepository.saveAndFlush(giftLog.update(gift));
+
             return new GiftSendAddResponse(gift);
         // 받은 선물이면
-        } else if (options.equals("receive")){
-
+        } else if (options.equals("receive")) {
             GiftReceive gift = giftAddRequest.toGiftReceiveEntity();
             gift.setMySchedule(myScheduleRepository.findById(giftAddRequest.getScheduleNo()).orElseThrow(NoSuchElementException::new));
             gift.setFriend(friendRepository.findById(giftAddRequest.getFriendNo()).orElseThrow(NoSuchElementException::new));

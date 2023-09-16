@@ -29,4 +29,14 @@ public class TributeLog {
     private Integer count;
     @Column
     private String gender;
+
+    // 로그 수정
+    public TributeLog update(TributeSend tributeSend) {
+        int newCount = this.count + 1;
+
+        this.avgPrice = (this.avgPrice * this.count + tributeSend.getAmount()) / newCount;
+        this.count = newCount;
+
+        return this;
+    }
 }
