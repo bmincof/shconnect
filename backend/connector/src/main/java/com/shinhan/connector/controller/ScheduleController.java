@@ -32,30 +32,33 @@ public class ScheduleController {
 
     @DeleteMapping("/{scheduleNo}")
     public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable Integer scheduleNo,
-                                                          @RequestParam(required = false) String option) {
-        return ResponseEntity.ok(scheduleService.deleteSchedule(scheduleNo, option));
+                                                          @RequestParam(required = false) String option,
+                                                          @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(scheduleService.deleteSchedule(scheduleNo, option, user));
     }
 
     // 일정 상세 조회
     @GetMapping("/{scheduleNo}")
     public ResponseEntity<ScheduleResponse> getScheduleDetail(@PathVariable Integer scheduleNo,
-                                                              @RequestParam(required = false) String option) {
-        return ResponseEntity.ok(scheduleService.selectSchedule(scheduleNo, option));
+                                                              @RequestParam(required = false) String option,
+                                                              @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(scheduleService.selectSchedule(scheduleNo, option, user));
     }
 
     // TODO: 검색 날짜 범위 추가, 정렬 기준 추가
     // 일정 목록 조회
     @GetMapping("/list")
-    public ResponseEntity<List<ScheduleListResponse>> getSchedules(@AuthenticationPrincipal UserDetailsImpl user) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(scheduleService.selectAllSchedule(user));
+    public ResponseEntity<List<ScheduleListResponse>> getSchedules(@RequestParam(name = "start-date", required = false) String startDate,
+                                                                   @RequestParam(name = "end-date", required = false) String endDate,
+                                                                   @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(scheduleService.selectAllSchedule(startDate, endDate, user));
     }
 
     @PutMapping("/{scheduleNo}")
     public ResponseEntity<ScheduleResponse> updateSchedule(@PathVariable Integer scheduleNo,
                                                            @RequestParam(required = false) String option,
-                                                           @RequestBody ScheduleUpdateRequest updateRequest) {
-        return ResponseEntity.ok(scheduleService.updateSchedule(scheduleNo, option, updateRequest));
+                                                           @RequestBody ScheduleUpdateRequest updateRequest,
+                                                           @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(scheduleService.updateSchedule(scheduleNo, option, updateRequest, user));
     }
 }
