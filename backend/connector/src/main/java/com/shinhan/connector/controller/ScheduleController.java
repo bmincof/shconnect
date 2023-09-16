@@ -55,7 +55,7 @@ public class ScheduleController {
     }
 
     @PutMapping("/{scheduleNo}")
-    public ResponseEntity<ScheduleResponse> updateSchedule(@PathVariable Integer scheduleNo,
+    public ResponseEntity<List<ScheduleResponse>> updateSchedule(@PathVariable Integer scheduleNo,
                                                            @RequestParam(required = false) String option,
                                                            @RequestBody ScheduleUpdateRequest updateRequest,
                                                            @AuthenticationPrincipal UserDetailsImpl user) {

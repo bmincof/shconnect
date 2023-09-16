@@ -1,7 +1,6 @@
 package com.shinhan.connector.entity;
 
 import com.shinhan.connector.config.TimeUtils;
-import com.shinhan.connector.dto.request.ScheduleAddRequest;
 import com.shinhan.connector.dto.request.ScheduleUpdateRequest;
 import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
@@ -18,7 +17,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -31,6 +29,8 @@ public class MySchedule {
     @GeneratedValue
     @Column(name = "my_schedule_no")
     private Integer no;
+    @Column(name = "root_schedule_no")
+    private Integer rootNo;
     @Column(length = 100, nullable = false)
     private String name;
     @Column(columnDefinition = "text")
@@ -83,6 +83,7 @@ public class MySchedule {
     public MySchedule duplicateMySchedule(Long nextTime) {
         return MySchedule.builder()
                 .name(this.name)
+                .rootNo(this.rootNo)
                 .content(this.content)
                 .category(this.category)
                 .date(nextTime)
