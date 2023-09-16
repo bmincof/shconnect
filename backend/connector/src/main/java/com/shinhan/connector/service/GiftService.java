@@ -41,7 +41,7 @@ public class GiftService {
             giftSendRepository.flush();
 
             return new GiftSendAddResponse(gift);
-            // 받은 선물이면
+        // 받은 선물이면
         } else if (options.equals("receive")){
 
             GiftReceive gift = giftAddRequest.toGiftReceiveEntity();
@@ -57,12 +57,21 @@ public class GiftService {
     }
 
     @Transactional
-    public ResponseMessage deleteGift(Integer giftNo, String option) {
+    public ResponseMessage deleteGift(Integer giftNo, String option, UserDetailsImpl user) {
         log.info("[선물 삭제] 선물삭제 요청. {}, {}", giftNo, option);
+
         if (option.equals("give")) {
+            giftSendRepository.findById(giftNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId());
+
             giftSendRepository.deleteById(giftNo);
             return new ResponseMessage("삭제가 완료되었습니다.");
         } else if (option.equals("receive")) {
+            giftReceiveRepository.findById(giftNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId());
+
             giftReceiveRepository.deleteById(giftNo);
             return new ResponseMessage("삭제가 완료되었습니다.");
         } else {
@@ -71,12 +80,17 @@ public class GiftService {
     }
 
     @Transactional(readOnly = true)
-    public GiftResponse getGift(Integer giftNo, String option) {
+    public GiftResponse getGift(Integer giftNo, String option, UserDetailsImpl user) {
         log.info("[선물 조회] 선물 상세조회 요청. {}, {}", giftNo, option);
+
         if (option.equals("give")) {
-            return new GiftSendResponse(giftSendRepository.findById(giftNo).orElseThrow(NoSuchElementException::new));
+            return new GiftSendResponse(giftSendRepository.findById(giftNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId()));
         } else if (option.equals("receive")) {
-            return new GiftReceiveResponse(giftReceiveRepository.findById(giftNo).orElseThrow(NoSuchElementException::new));
+            return new GiftReceiveResponse(giftReceiveRepository.findById(giftNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId()));
         } else {
             throw new IllegalArgumentException();
         }
@@ -85,6 +99,7 @@ public class GiftService {
     @Transactional(readOnly = true)
     public List<GiftResponse> getAllGift(String option, Integer friendNo, UserDetailsImpl user) {
         log.info("[선물 목록] 선물 목록 조회 요청. {}, {}", friendNo, option);
+
         if (option.equals("give")) {
             // 회원의 일정 목록에 있는 모든 보낸선물을 하나의 리스트로 담기
             return scheduleRepository.findByMember(user.getId()).stream()

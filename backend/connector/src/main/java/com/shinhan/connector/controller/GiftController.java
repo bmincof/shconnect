@@ -30,13 +30,17 @@ public class GiftController {
     }
 
     @DeleteMapping("/{giftNo}")
-    public ResponseEntity<ResponseMessage> deleteGift(@PathVariable Integer giftNo, @RequestParam String option) {
-        return ResponseEntity.ok(giftService.deleteGift(giftNo, option));
+    public ResponseEntity<ResponseMessage> deleteGift(@PathVariable Integer giftNo,
+                                                      @RequestParam String option,
+                                                      @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(giftService.deleteGift(giftNo, option, user));
     }
 
     @GetMapping("/{giftNo}")
-    public ResponseEntity<? extends GiftResponse> getGift(@PathVariable Integer giftNo, @RequestParam String option) {
-        return ResponseEntity.ok(giftService.getGift(giftNo, option));
+    public ResponseEntity<? extends GiftResponse> getGift(@PathVariable Integer giftNo,
+                                                          @RequestParam String option,
+                                                          @AuthenticationPrincipal UserDetailsImpl user) {
+        return ResponseEntity.ok(giftService.getGift(giftNo, option, user));
     }
 
     @GetMapping("/list")
