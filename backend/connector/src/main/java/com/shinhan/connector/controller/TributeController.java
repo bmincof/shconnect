@@ -1,6 +1,7 @@
 package com.shinhan.connector.controller;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
+import com.shinhan.connector.dto.request.SearchCondition;
 import com.shinhan.connector.dto.request.TributeRegistRequest;
 import com.shinhan.connector.dto.response.TributeResponse;
 import com.shinhan.connector.service.TributeService;
@@ -23,5 +24,14 @@ public class TributeController {
     @GetMapping("/{tributeNo}")
     public ResponseEntity<TributeResponse> getDetail(@RequestParam String option, @PathVariable Integer tributeNo) {
         return ResponseEntity.status(HttpStatus.OK).body(tributeService.getDetail(option, tributeNo             ));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getList(SearchCondition searchCondition, @AuthenticationPrincipal UserDetailsImpl user) {
+        if (searchCondition.getAmount() == null || searchCondition.getAmount()) {
+            return ResponseEntity.ok(tributeService.getAmount(searchCondition, user));
+        } else {
+            return ResponseEntity.ok(tributeService.getList(searchCondition, user));
+        }
     }
 }

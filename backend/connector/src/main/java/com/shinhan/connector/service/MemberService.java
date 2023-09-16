@@ -49,7 +49,7 @@ public class MemberService {
         Member member = memberRepository.findMemberById(signInRequest.getId())
                 .orElseThrow(() -> {
                     log.error("[로그인] 멤버를 찾을 수 없습니다. {}", signInRequest.getId());
-                    return new NoSuchElementException();
+                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디가 잘못되었습니다.");
                 });
 
         if(!passwordEncoder.matches(signInRequest.getPassword(), member.getPassword())) {
