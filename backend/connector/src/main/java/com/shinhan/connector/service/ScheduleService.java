@@ -4,15 +4,13 @@ import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.ScheduleAddRequest;
 import com.shinhan.connector.dto.request.ScheduleUpdateRequest;
+import com.shinhan.connector.dto.request.SearchCondition;
 import com.shinhan.connector.dto.response.ScheduleAddResponse;
 import com.shinhan.connector.dto.response.ScheduleListResponse;
 import com.shinhan.connector.dto.response.ScheduleResponse;
 import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
-import com.shinhan.connector.repository.FriendRepository;
-import com.shinhan.connector.repository.MemberRepository;
-import com.shinhan.connector.repository.MyScheduleRepository;
-import com.shinhan.connector.repository.ScheduleRepository;
+import com.shinhan.connector.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleQueryDslRepository scheduleQueryDslRepository;
     private final MyScheduleRepository myScheduleRepository;
+    private final MyScheduleQueryDslRepository myScheduleQueryDslRepository;
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
@@ -64,10 +64,16 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ResponseMessage deleteSchedule(Integer scheduleNo, String option) {
+    public ResponseMessage deleteSchedule(Integer scheduleNo, String option, UserDetailsImpl user) {
         if (option.equals("mine")) {
+            myScheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId());
             myScheduleRepository.deleteById(scheduleNo);
         } else {
+            scheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId());
             scheduleRepository.deleteById(scheduleNo);
         }
 
@@ -76,13 +82,15 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     // 일정을 상세조회하는 메서드
-    public ScheduleResponse selectSchedule(Integer scheduleNo, String option) {
+    public ScheduleResponse selectSchedule(Integer scheduleNo, String option, UserDetailsImpl user) {
         if (option == null) {
             return ScheduleResponse.fromScheduleEntity(scheduleRepository.findById(scheduleNo)
-                    .orElseThrow(NoSuchElementException::new));
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId()));
         } else if (option.equals("mine")){
             return ScheduleResponse.fromMyScheduleEntity(myScheduleRepository.findById(scheduleNo)
-                    .orElseThrow(NoSuchElementException::new));
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId()));
         } else {
             throw new NoSuchElementException();
         }
@@ -90,29 +98,32 @@ public class ScheduleService {
 
     // 일정 목록을 조회하는 메서드
     @Transactional(readOnly = true)
-    public List<ScheduleListResponse> selectAllSchedule(UserDetailsImpl user) {
+    public List<ScheduleListResponse> selectAllSchedule(SearchCondition searchCondition, UserDetailsImpl user) {
         // 일정 목록 모두 불러오기
-        List<ScheduleListResponse> schedules = scheduleRepository.findByMember(user.getId()).stream()
+        List<ScheduleListResponse> schedules =
+                scheduleQueryDslRepository.getListByCondition(searchCondition, user.getId()).stream()
                 .map(ScheduleListResponse::fromScheduleEntity)
                 .collect(Collectors.toList());
         // 내 일정 목록 모두 불러와서 추가하기
-        schedules.addAll(myScheduleRepository.findByMember(user.getId()).stream()
+        schedules.addAll(myScheduleQueryDslRepository.getListByCondition(searchCondition, user.getId()).stream()
                 .map(ScheduleListResponse::fromMyScheduleEntity)
                 .collect(Collectors.toList()));
 
-        // 최근 날짜부터 조회
-        schedules.sort(Comparator.comparing(ScheduleListResponse::getDate, Comparator.reverseOrder()));
+        // 오래된 날짜부터 조회
+        schedules.sort(Comparator.comparingLong(ScheduleListResponse::getDate));
 
         return schedules;
     }
 
     @Transactional
-    public ScheduleResponse updateSchedule(Integer scheduleNo, String option, ScheduleUpdateRequest request) {
+    public ScheduleResponse updateSchedule(Integer scheduleNo, String option, ScheduleUpdateRequest request, UserDetailsImpl user) {
         log.info("[일정 수정] 일정수정 요청. {}, {}, {}", scheduleNo, option, request.toString());
 
         if (option == null) {
             // 엔티티 조회해서 수정
-            Schedule schedule = scheduleRepository.findById(scheduleNo).orElseThrow(NoSuchElementException::new);
+            Schedule schedule = scheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId());
             schedule.update(request);
 
             // 수정사항 업데이트
@@ -123,7 +134,9 @@ public class ScheduleService {
             return ScheduleResponse.fromScheduleEntity(schedule);
         } else if (option.equals("mine")) {
             // 엔티티 조회해서 수정
-            MySchedule mySchedule = myScheduleRepository.findById(scheduleNo).orElseThrow(NoSuchElementException::new);
+            MySchedule mySchedule = myScheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId());
             mySchedule.update(request);
 
             // 수정사항 업데이트

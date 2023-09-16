@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import java.util.List;
@@ -65,5 +67,12 @@ public class Schedule {
         this.date = updateRequest.getDate();
         this.repeatCycle = RepeatCycle.getRepeatCycle(updateRequest.getRepeatCycle());
         this.alarm = Alarm.getAlarm(updateRequest.getAlarm());
+    }
+
+    public Schedule isAllowed(int userId) {
+        if (userId != member.getNo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "자신의 일정만 조회할 수 있습니다.");
+        }
+        return this;
     }
 }
