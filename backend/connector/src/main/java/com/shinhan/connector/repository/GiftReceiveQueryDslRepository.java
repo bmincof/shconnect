@@ -6,6 +6,8 @@ import com.shinhan.connector.dto.request.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import static com.shinhan.connector.entity.QGiftReceive.giftReceive;
 
 @Repository
@@ -13,15 +15,15 @@ import static com.shinhan.connector.entity.QGiftReceive.giftReceive;
 public class GiftReceiveQueryDslRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-    public Long getAmountByCondition(SearchCondition searchCondition, Integer userNo) {
-        return jpaQueryFactory.select(
-                giftReceive.priceMax.sum().add(giftReceive.priceMin.sum()))
+    public Optional<Long> getAmountByCondition(SearchCondition searchCondition, Integer userNo) {
+        return Optional.ofNullable(jpaQueryFactory.select(
+                        giftReceive.priceMax.sum().add(giftReceive.priceMin.sum()))
                 .from(giftReceive)
                 .where(
                         sameUser(userNo),
                         startDate(searchCondition.getStart()),
                         endDate(searchCondition.getEnd())
-                ).fetchOne();
+                ).fetchOne());
     }
 
     private BooleanExpression endDate(Long endDate) {

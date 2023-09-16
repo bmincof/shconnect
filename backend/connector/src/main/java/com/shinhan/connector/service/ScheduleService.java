@@ -5,9 +5,7 @@ import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.ScheduleAddRequest;
 import com.shinhan.connector.dto.request.ScheduleUpdateRequest;
 import com.shinhan.connector.dto.request.SearchCondition;
-import com.shinhan.connector.dto.response.ScheduleAddResponse;
-import com.shinhan.connector.dto.response.ScheduleListResponse;
-import com.shinhan.connector.dto.response.ScheduleResponse;
+import com.shinhan.connector.dto.response.*;
 import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.repository.*;
@@ -99,6 +97,48 @@ public class ScheduleService {
         }
     }
 
+    // 일정의 모든 선물 목록을 조회하는 메서드
+    public List<GiftResponse> selectAllGiftsBySchedule(Integer scheduleNo, String option, UserDetailsImpl user) {
+        if (option == null) {
+            return scheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId())
+                    .getGiftSends().stream()
+                    .map(GiftSendResponse::new)
+                    .collect(Collectors.toList());
+        } else if (option.equals("mine")) {
+            return myScheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId())
+                    .getGiftReceives().stream()
+                    .map(GiftReceiveResponse::new)
+                    .collect(Collectors.toList());
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
+
+    // 일정의 모든 경조사비를 조회하는 메서드
+    public List<TributeResponse> selectAllTributesBySchedule(Integer scheduleNo, String option, UserDetailsImpl user) {
+        if (option == null) {
+            return scheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId())
+                    .getTributeSends().stream()
+                    .map(TributeResponse::entityToDto)
+                    .collect(Collectors.toList());
+        } else if (option.equals("mine")) {
+            return myScheduleRepository.findById(scheduleNo)
+                    .orElseThrow(NoSuchElementException::new)
+                    .isAllowed(user.getId())
+                    .getTributeReceives().stream()
+                    .map(TributeResponse::entityToDto)
+                    .collect(Collectors.toList());
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
+
     // 일정 목록을 조회하는 메서드
     @Transactional(readOnly = true)
     public List<ScheduleListResponse> selectAllSchedule(SearchCondition searchCondition, UserDetailsImpl user) {
@@ -107,13 +147,22 @@ public class ScheduleService {
                 scheduleQueryDslRepository.getListByCondition(searchCondition, user.getId()).stream()
                 .map(ScheduleListResponse::fromScheduleEntity)
                 .collect(Collectors.toList());
+
         // 내 일정 목록 모두 불러와서 추가하기
         schedules.addAll(myScheduleQueryDslRepository.getListByCondition(searchCondition, user.getId()).stream()
                 .map(ScheduleListResponse::fromMyScheduleEntity)
+                .sorted(Comparator.comparingLong(ScheduleListResponse::getDate)
+                        // 둘 다 널이면 순서 유지, null이 더 앞으로, 관계 순
+                        .thenComparing((o1, o2) -> {
+                            if (o1 == null && o2 == null) {
+                                return 0;
+                            }
+                            if (o1 == null || o2 == null) {
+                                return o1 == null ? -1 : 1;
+                            }
+                            return (o1.getFriend().getRelation().compareTo(o2.getFriend().getRelation()));
+                        }))
                 .collect(Collectors.toList()));
-
-        // 오래된 날짜부터 조회
-        schedules.sort(Comparator.comparingLong(ScheduleListResponse::getDate));
 
         return schedules;
     }

@@ -46,6 +46,19 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.selectSchedule(scheduleNo, option, user));
     }
 
+    // 일정의 선물, 경조사비 목록 조회
+    @GetMapping("/{scheduleNo}/list")
+    public ResponseEntity<?> getListOfSchedule(@PathVariable Integer scheduleNo,
+                                               @RequestParam String type,
+                                               @RequestParam(required = false) String option,
+                                               @AuthenticationPrincipal UserDetailsImpl user) {
+        if (type.equals("tribute")) {
+            return ResponseEntity.ok(scheduleService.selectAllTributesBySchedule(scheduleNo, option, user));
+        } else {
+            return ResponseEntity.ok(scheduleService.selectAllGiftsBySchedule(scheduleNo, option, user));
+        }
+    }
+
     // 일정 목록 조회
     @GetMapping("/list")
     public ResponseEntity<List<ScheduleListResponse>> getSchedules(SearchCondition searchCondition,

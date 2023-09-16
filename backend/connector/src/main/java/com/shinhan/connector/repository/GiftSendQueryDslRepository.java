@@ -6,6 +6,8 @@ import com.shinhan.connector.dto.request.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import static com.shinhan.connector.entity.QGiftSend.giftSend;
 
 @Repository
@@ -13,14 +15,14 @@ import static com.shinhan.connector.entity.QGiftSend.giftSend;
 public class GiftSendQueryDslRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-    public Long getAmountByCondition(SearchCondition searchCondition, Integer userNo) {
-        return jpaQueryFactory.select(giftSend.price.sum())
+    public Optional<Long> getAmountByCondition(SearchCondition searchCondition, Integer userNo) {
+        return Optional.ofNullable(jpaQueryFactory.select(giftSend.price.sum())
                 .from(giftSend)
                 .where(
                         sameUser(userNo),
                         startDate(searchCondition.getStart()),
                         endDate(searchCondition.getEnd())
-                ).fetchOne();
+                ).fetchOne());
     }
 
     private BooleanExpression endDate(Long endDate) {
