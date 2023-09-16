@@ -3,6 +3,7 @@ package com.shinhan.connector.controller;
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.*;
 import com.shinhan.connector.dto.request.ScheduleAddRequest;
+import com.shinhan.connector.dto.request.ScheduleUpdateRequest;
 import com.shinhan.connector.dto.response.ScheduleAddResponse;
 import com.shinhan.connector.dto.response.ScheduleListResponse;
 import com.shinhan.connector.dto.response.ScheduleResponse;
@@ -49,5 +50,12 @@ public class ScheduleController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(scheduleService.selectAllSchedule(user));
+    }
+
+    @PutMapping("/{scheduleNo}")
+    public ResponseEntity<ScheduleResponse> updateSchedule(@PathVariable Integer scheduleNo,
+                                                           @RequestParam(required = false) String option,
+                                                           @RequestBody ScheduleUpdateRequest updateRequest) {
+        return ResponseEntity.ok(scheduleService.updateSchedule(scheduleNo, option, updateRequest));
     }
 }

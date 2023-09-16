@@ -3,6 +3,7 @@ package com.shinhan.connector.service;
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.ScheduleAddRequest;
+import com.shinhan.connector.dto.request.ScheduleUpdateRequest;
 import com.shinhan.connector.dto.response.ScheduleAddResponse;
 import com.shinhan.connector.dto.response.ScheduleListResponse;
 import com.shinhan.connector.dto.response.ScheduleResponse;
@@ -105,5 +106,34 @@ public class ScheduleService {
         return schedules;
     }
 
-    //TODO: 일정 수정 메서드 추가
+    @Transactional
+    public ScheduleResponse updateSchedule(Integer scheduleNo, String option, ScheduleUpdateRequest request) {
+        log.info("[일정 수정] 일정수정 요청. {}, {}, {}", scheduleNo, option, request.toString());
+
+        if (option == null) {
+            // 엔티티 조회해서 수정
+            Schedule schedule = scheduleRepository.findById(scheduleNo).orElseThrow(NoSuchElementException::new);
+            schedule.update(request);
+
+            // 수정사항 업데이트
+            scheduleRepository.save(schedule);
+            scheduleRepository.flush();
+
+            // API 응답 생성
+            return ScheduleResponse.fromScheduleEntity(schedule);
+        } else if (option.equals("mine")) {
+            // 엔티티 조회해서 수정
+            MySchedule mySchedule = myScheduleRepository.findById(scheduleNo).orElseThrow(NoSuchElementException::new);
+            mySchedule.update(request);
+
+            // 수정사항 업데이트
+            myScheduleRepository.save(mySchedule);
+            myScheduleRepository.flush();
+
+            // API 응답 생성
+            return ScheduleResponse.fromMyScheduleEntity(mySchedule);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 }

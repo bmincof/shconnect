@@ -1,5 +1,6 @@
 package com.shinhan.connector.entity;
 
+import com.shinhan.connector.dto.request.ScheduleUpdateRequest;
 import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
 import com.sun.istack.NotNull;
@@ -54,4 +55,14 @@ public class MySchedule {
     List<GiftReceive> giftReceives;
     @OneToMany(mappedBy = "mySchedule", fetch = FetchType.LAZY)
     List<TributeReceive> tributeReceives;
+
+    // 비즈니스 로직
+    public void update(ScheduleUpdateRequest updateRequest) {
+        this.name = updateRequest.getName();
+        this.content = updateRequest.getContent();
+        this.category = updateRequest.getCategory();
+        this.date = updateRequest.getDate();
+        this.repeatCycle = RepeatCycle.getRepeatCycle(updateRequest.getRepeatCycle());
+        this.alarm = Alarm.getAlarm(updateRequest.getAlarm());
+    }
 }
