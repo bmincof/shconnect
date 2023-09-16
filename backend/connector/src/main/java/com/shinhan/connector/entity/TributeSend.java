@@ -1,5 +1,6 @@
 package com.shinhan.connector.entity;
 
+import com.shinhan.connector.dto.request.TributeModifyRequest;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +30,9 @@ public class TributeSend {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_no")
     Schedule schedule;
+
+    public void update(TributeModifyRequest tributeModifyRequest) {
+        this.amount = tributeModifyRequest.getAmount() == null ? amount : tributeModifyRequest.getAmount();
+        this.note = tributeModifyRequest.getNote() == null ? note : tributeModifyRequest.getNote();
+    }
 }

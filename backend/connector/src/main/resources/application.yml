@@ -5,9 +5,13 @@ spring:
         format_sql: true
         show_sql: true
 #    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
+  sql:
+    init:
+      encoding: utf-8
 
     open-in-view: false # SSE 연결되는 동안 JPA에서 DB와 지속적으로 연결되지 않도록 설정
 
