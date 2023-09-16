@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MyScheduleRepository extends JpaRepository<MySchedule, Integer> {
-    @Query(value = "select * from my_schedule where member_no = :memberNo", nativeQuery = true)
-    List<MySchedule> findByMember(@Param("memberNo") Integer memberNo);
+    @Query(value = "select * from schedule where root_schedule_no = :rootNo and date > :date", nativeQuery = true)
+    List<MySchedule> findByRootNoAndDate(@Param("rootNo") Integer rootNo, @Param("date") Long date);
 }

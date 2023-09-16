@@ -24,7 +24,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleAddResponse> addSchedule(@RequestBody ScheduleAddRequest request,
+    public ResponseEntity<List<ScheduleAddResponse>> addSchedule(@RequestBody ScheduleAddRequest request,
                                                            @AuthenticationPrincipal UserDetailsImpl user) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -55,7 +55,7 @@ public class ScheduleController {
     }
 
     @PutMapping("/{scheduleNo}")
-    public ResponseEntity<ScheduleResponse> updateSchedule(@PathVariable Integer scheduleNo,
+    public ResponseEntity<List<ScheduleResponse>> updateSchedule(@PathVariable Integer scheduleNo,
                                                            @RequestParam(required = false) String option,
                                                            @RequestBody ScheduleUpdateRequest updateRequest,
                                                            @AuthenticationPrincipal UserDetailsImpl user) {

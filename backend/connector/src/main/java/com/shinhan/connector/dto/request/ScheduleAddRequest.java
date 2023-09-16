@@ -1,12 +1,13 @@
 package com.shinhan.connector.dto.request;
 
+import com.shinhan.connector.entity.Friend;
+import com.shinhan.connector.entity.Member;
 import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
 import com.shinhan.connector.enums.Alarm;
 import com.shinhan.connector.enums.RepeatCycle;
-import lombok.*;
-
-import java.util.NoSuchElementException;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 @Builder
@@ -25,29 +26,33 @@ public class ScheduleAddRequest {
     private String content;
     // 알람 여부
     private Integer alarm;
-    private String memberId;
+    private Member member;
+    private Friend friend;
 
     public Schedule toScheduleEntity() {
         return Schedule.builder()
-                .name(this.getName())
-                .content(this.getContent())
-                .category(this.getCategory())
-                .date(this.getDate())
-                .repeatCycle(RepeatCycle.getRepeatCycle(this.getRepeatCycle()))
+                .name(this.name)
+                .content(this.content)
+                .category(this.category)
+                .date(this.date)
+                .repeatCycle(RepeatCycle.getRepeatCycle(this.repeatCycle))
                 .favorite(false)
-                .alarm(Alarm.getAlarm(this.getAlarm()))
+                .alarm(Alarm.getAlarm(this.alarm))
+                .member(this.member)
+                .friend(this.friend)
                 .build();
     }
 
     public MySchedule toMyScheduleEntity() {
         return MySchedule.builder()
-                .name(this.getName())
-                .content(this.getContent())
-                .category(this.getCategory())
-                .date(this.getDate())
-                .repeatCycle(RepeatCycle.getRepeatCycle(this.getRepeatCycle()))
+                .name(this.name)
+                .content(this.content)
+                .category(this.category)
+                .date(this.date)
+                .repeatCycle(RepeatCycle.getRepeatCycle(this.repeatCycle))
                 .favorite(false)
-                .alarm(Alarm.getAlarm(this.getAlarm()))
+                .alarm(Alarm.getAlarm(this.alarm))
+                .member(this.member)
                 .build();
     }
 }

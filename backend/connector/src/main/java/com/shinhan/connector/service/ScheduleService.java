@@ -34,32 +34,33 @@ public class ScheduleService {
 
     // 새로운 일정을 추가하는 메서드
     @Transactional
-    public ScheduleAddResponse addSchedule(ScheduleAddRequest request, UserDetailsImpl user) {
-        log.info("[일정 등록] 일정등록 요청. {}, {}", request.toString(), user.getUserId());
+    public List<ScheduleAddResponse> addSchedule(ScheduleAddRequest addRequest, UserDetailsImpl user) {
+        log.info("[일정 등록] 일정등록 요청. {}, {}", addRequest.toString(), user.getUserId());
 
-        if (request.getFriendNo() == null) {
-            // 저장할 엔티티 생성
-            MySchedule mySchedule = request.toMyScheduleEntity();
-            mySchedule.setMember(memberRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new));
+        // 요청에 회원 정보 추가
+        addRequest.setMember(memberRepository.findById(user.getId())
+                .orElseThrow(NoSuchElementException::new));
 
-            // 생성한 엔티티 저장
-            myScheduleRepository.save(mySchedule);
-            myScheduleRepository.flush();
+        if (addRequest.getFriendNo() == null) {
+            MySchedule mySchedule = myScheduleRepository.saveAndFlush(addRequest.toMyScheduleEntity());
 
-            // API 응답 생성
-            return ScheduleAddResponse.fromMyScheduleEntity(mySchedule);
+            mySchedule.setRootNo(mySchedule.getNo());
+
+            // 반복 주기에 맞춰 엔티티 생성 후 저장
+            return myScheduleRepository.saveAll(MySchedule.generateMySchedules(mySchedule)).stream()
+                    .map(ScheduleAddResponse::fromMyScheduleEntity)
+                    .collect(Collectors.toList());
         } else {
-            // 저장할 엔티티 생성
-            Schedule schedule = request.toScheduleEntity();
-            schedule.setFriend(friendRepository.findById(request.getFriendNo()).orElseThrow(NoSuchElementException::new));
-            schedule.setMember(memberRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new));
+            // 요청에 친구 정보 추가
+            addRequest.setFriend(friendRepository.findById(addRequest.getFriendNo())
+                    .orElseThrow(NoSuchElementException::new));
+            Schedule schedule = scheduleRepository.saveAndFlush(addRequest.toScheduleEntity());
 
-            // 생성한 엔티티 저장
-            scheduleRepository.save(schedule);
-            scheduleRepository.flush();
+            schedule.setRootNo(schedule.getNo());
 
-            // API 응답 생성
-            return ScheduleAddResponse.fromScheduleEntity(schedule);
+            return scheduleRepository.saveAll(Schedule.generateSchedules(schedule)).stream()
+                    .map(ScheduleAddResponse::fromScheduleEntity)
+                    .collect(Collectors.toList());
         }
     }
 
@@ -116,7 +117,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponse updateSchedule(Integer scheduleNo, String option, ScheduleUpdateRequest request, UserDetailsImpl user) {
+    public List<ScheduleResponse> updateSchedule(Integer scheduleNo, String option, ScheduleUpdateRequest request, UserDetailsImpl user) {
         log.info("[일정 수정] 일정수정 요청. {}, {}, {}", scheduleNo, option, request.toString());
 
         if (option == null) {
@@ -124,27 +125,31 @@ public class ScheduleService {
             Schedule schedule = scheduleRepository.findById(scheduleNo)
                     .orElseThrow(NoSuchElementException::new)
                     .isAllowed(user.getId());
+
+            // 기존에 있던 이후 일정을 모두 삭제
+            List<Schedule> schedules = scheduleRepository.findByRootNoAndDate(schedule.getRootNo(), schedule.getDate());
+            scheduleRepository.deleteAll(schedules);
+
+            // 수정사항 업데이트 후 새로운 반복 주기에 맞춰 일정 추가
             schedule.update(request);
-
-            // 수정사항 업데이트
-            scheduleRepository.save(schedule);
-            scheduleRepository.flush();
-
-            // API 응답 생성
-            return ScheduleResponse.fromScheduleEntity(schedule);
+            return scheduleRepository.saveAll(Schedule.generateSchedules(schedule)).stream()
+                    .map(ScheduleResponse::fromScheduleEntity)
+                    .collect(Collectors.toList());
         } else if (option.equals("mine")) {
             // 엔티티 조회해서 수정
             MySchedule mySchedule = myScheduleRepository.findById(scheduleNo)
                     .orElseThrow(NoSuchElementException::new)
                     .isAllowed(user.getId());
+
+            // 기존에 있던 이후 일정을 모우 삭제
+            List<MySchedule> mySchedules = myScheduleRepository.findByRootNoAndDate(mySchedule.getRootNo(), mySchedule.getDate());
+            myScheduleRepository.deleteAll(mySchedules);
+
+            // 수정사항 업데이트 후 새로운 반복 주기에 맞춰 일정 추가
             mySchedule.update(request);
-
-            // 수정사항 업데이트
-            myScheduleRepository.save(mySchedule);
-            myScheduleRepository.flush();
-
-            // API 응답 생성
-            return ScheduleResponse.fromMyScheduleEntity(mySchedule);
+            return myScheduleRepository.saveAll(MySchedule.generateMySchedules(mySchedule)).stream()
+                    .map(ScheduleResponse::fromMyScheduleEntity)
+                    .collect(Collectors.toList());
         } else {
             throw new IllegalArgumentException();
         }
