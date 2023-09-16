@@ -44,6 +44,14 @@ public class FriendService {
         log.info("[지인목록 조회] 지인목록 조회 요청. {}", user.toString());
 
         return friendRepository.findByMember(user.getId()).stream()
+                .sorted((f1, f2) -> {
+                    int relationCompare = f1.getRelation().compareTo(f2.getRelation());
+                    if (relationCompare == 0) {
+                        return f1.getName().compareTo(f2.getName());
+                    } else {
+                        return relationCompare;
+                    }
+                })
                 .map((friend -> FriendResponse.fromEntity(friend)))
                 .collect(Collectors.toList());
     }
