@@ -3,7 +3,6 @@ package com.shinhan.connector.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shinhan.connector.dto.request.SearchCondition;
-import com.shinhan.connector.entity.TributeReceive;
 import com.shinhan.connector.entity.TributeSend;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,9 +21,9 @@ public class TributeSendQueryDslRepository {
         return jpaQueryFactory.selectFrom(tributeSend)
                 .where(
                         sameUser(userNo),
-                        sameFriend(searchCondition.getFriendNo()),
-                        startDate(searchCondition.getStartDate()),
-                        endDate(searchCondition.getEndDate())
+                        sameFriend(searchCondition.getFriend()),
+                        startDate(searchCondition.getStart()),
+                        endDate(searchCondition.getEnd())
                 ).fetch();
     }
 
@@ -33,9 +32,9 @@ public class TributeSendQueryDslRepository {
                 .from(tributeSend)
                 .where(
                         sameUser(userNo),
-                        sameFriend(searchCondition.getFriendNo()),
-                        startDate(searchCondition.getStartDate()),
-                        endDate(searchCondition.getEndDate())
+                        sameFriend(searchCondition.getFriend()),
+                        startDate(searchCondition.getStart()),
+                        endDate(searchCondition.getEnd())
                 ).fetchOne();
     }
 
