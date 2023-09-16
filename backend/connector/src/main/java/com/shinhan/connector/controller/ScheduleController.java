@@ -1,9 +1,10 @@
 package com.shinhan.connector.controller;
 
 import com.shinhan.connector.config.jwt.UserDetailsImpl;
-import com.shinhan.connector.dto.*;
+import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.ScheduleAddRequest;
 import com.shinhan.connector.dto.request.ScheduleUpdateRequest;
+import com.shinhan.connector.dto.request.SearchCondition;
 import com.shinhan.connector.dto.response.ScheduleAddResponse;
 import com.shinhan.connector.dto.response.ScheduleListResponse;
 import com.shinhan.connector.dto.response.ScheduleResponse;
@@ -45,13 +46,12 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.selectSchedule(scheduleNo, option, user));
     }
 
-    // TODO: 검색 날짜 범위 추가, 정렬 기준 추가
     // 일정 목록 조회
     @GetMapping("/list")
-    public ResponseEntity<List<ScheduleListResponse>> getSchedules(@RequestParam(name = "start-date", required = false) String startDate,
-                                                                   @RequestParam(name = "end-date", required = false) String endDate,
+    public ResponseEntity<List<ScheduleListResponse>> getSchedules(SearchCondition searchCondition,
                                                                    @AuthenticationPrincipal UserDetailsImpl user) {
-        return ResponseEntity.ok(scheduleService.selectAllSchedule(startDate, endDate, user));
+        System.out.println(searchCondition);
+        return ResponseEntity.ok(scheduleService.selectAllSchedule(searchCondition, user));
     }
 
     @PutMapping("/{scheduleNo}")

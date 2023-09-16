@@ -4,15 +4,13 @@ import com.shinhan.connector.config.jwt.UserDetailsImpl;
 import com.shinhan.connector.dto.ResponseMessage;
 import com.shinhan.connector.dto.request.ScheduleAddRequest;
 import com.shinhan.connector.dto.request.ScheduleUpdateRequest;
+import com.shinhan.connector.dto.request.SearchCondition;
 import com.shinhan.connector.dto.response.ScheduleAddResponse;
 import com.shinhan.connector.dto.response.ScheduleListResponse;
 import com.shinhan.connector.dto.response.ScheduleResponse;
 import com.shinhan.connector.entity.MySchedule;
 import com.shinhan.connector.entity.Schedule;
-import com.shinhan.connector.repository.FriendRepository;
-import com.shinhan.connector.repository.MemberRepository;
-import com.shinhan.connector.repository.MyScheduleRepository;
-import com.shinhan.connector.repository.ScheduleRepository;
+import com.shinhan.connector.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleQueryDslRepository scheduleQueryDslRepository;
     private final MyScheduleRepository myScheduleRepository;
+    private final MyScheduleQueryDslRepository myScheduleQueryDslRepository;
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
@@ -98,18 +98,19 @@ public class ScheduleService {
 
     // 일정 목록을 조회하는 메서드
     @Transactional(readOnly = true)
-    public List<ScheduleListResponse> selectAllSchedule(String startDate, String endDate, UserDetailsImpl user) {
+    public List<ScheduleListResponse> selectAllSchedule(SearchCondition searchCondition, UserDetailsImpl user) {
         // 일정 목록 모두 불러오기
-        List<ScheduleListResponse> schedules = scheduleRepository.findByMember(user.getId()).stream()
+        List<ScheduleListResponse> schedules =
+                scheduleQueryDslRepository.getListByCondition(searchCondition, user.getId()).stream()
                 .map(ScheduleListResponse::fromScheduleEntity)
                 .collect(Collectors.toList());
         // 내 일정 목록 모두 불러와서 추가하기
-        schedules.addAll(myScheduleRepository.findByMember(user.getId()).stream()
+        schedules.addAll(myScheduleQueryDslRepository.getListByCondition(searchCondition, user.getId()).stream()
                 .map(ScheduleListResponse::fromMyScheduleEntity)
                 .collect(Collectors.toList()));
 
-        // 최근 날짜부터 조회
-        schedules.sort(Comparator.comparing(ScheduleListResponse::getDate, Comparator.reverseOrder()));
+        // 오래된 날짜부터 조회
+        schedules.sort(Comparator.comparingLong(ScheduleListResponse::getDate));
 
         return schedules;
     }
